@@ -32,7 +32,7 @@ export default function Footer({ scrollTo }) {
         <div>
           <button onClick={() => scrollTo('home')} style={{ display: 'flex', alignItems: 'center', gap: 16, background: 'none', border: 'none', marginBottom: 28, padding: 0 }}>
             <img
-              src="/logo.png"
+              src={`${import.meta.env.BASE_URL}logo.png`}
               alt="Haroon's Weddings & Events"
               onError={e => { e.target.onerror = null; e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
               style={{ width: 52, height: 52, borderRadius: '50%', border: '1.5px solid rgba(197,160,89,0.35)', objectFit: 'cover' }}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import logoImage from '../assets/logo.png';
 
 export default function Navbar({ scrollTo }) {
   const [scrolled, setScrolled]   = useState(false);
@@ -55,7 +56,7 @@ export default function Navbar({ scrollTo }) {
           style={{ display: 'flex', alignItems: 'center', gap: 14, background: 'none', border: 'none', padding: 0 }}
         >
           <img
-            src={`${import.meta.env.BASE_URL}logo.png`}
+            src={logoImage}
             alt="Haroon's Weddings & Events"
             onError={e => { e.target.onerror = null; e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
             style={{ width: 46, height: 46, borderRadius: '50%', border: '1.5px solid rgba(197,160,89,0.4)', objectFit: 'cover', transition: 'transform 0.4s ease', boxShadow: '0 0 20px rgba(197,160,89,0.1)' }}

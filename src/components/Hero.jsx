@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 /* ── Particle canvas with aurora effect ── */
@@ -117,7 +117,9 @@ function ParallaxOrbs({ mousePos }) {
   );
 }
 
-export default function Hero({ scrollTo }) {
+const DEFAULT_HERO = "https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80";
+
+export default function Hero({ scrollTo, heroImageUrl }) {
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
   const heroRef = useRef(null);
   const { scrollY } = useScroll();
@@ -146,16 +148,29 @@ export default function Hero({ scrollTo }) {
       {/* Base bg */}
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, #020706 0%, #060f0a 45%, #08150f 100%)' }} />
 
-      {/* Parallax hero image */}
-      <motion.div
-        style={{
-          position: 'absolute', inset: '-10%',
-          backgroundImage: "url('https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80')",
-          backgroundSize: 'cover', backgroundPosition: 'center',
-          opacity: 0.15,
-          y: imgY,
-        }}
-      />
+      {/* Parallax hero media */}
+      {heroImageUrl && (heroImageUrl.endsWith('.mp4') || heroImageUrl.endsWith('.webm')) ? (
+        <motion.video
+          autoPlay loop muted playsInline
+          src={heroImageUrl}
+          style={{
+            position: 'absolute', inset: '-10%',
+            width: '120%', height: '120%', objectFit: 'cover',
+            opacity: 0.15,
+            y: imgY,
+          }}
+        />
+      ) : (
+        <motion.div
+          style={{
+            position: 'absolute', inset: '-10%',
+            backgroundImage: `url('${heroImageUrl || DEFAULT_HERO}')`,
+            backgroundSize: 'cover', backgroundPosition: 'center',
+            opacity: 0.15,
+            y: imgY,
+          }}
+        />
+      )}
 
       {/* Radial vignette */}
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 20%, rgba(3,7,5,0.85) 100%)', zIndex: 3 }} />

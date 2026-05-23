@@ -16,9 +16,21 @@ import Reviews  from './components/Reviews';
 import Contact  from './components/Contact';
 import Footer          from './components/Footer';
 import SectionDivider  from './components/SectionDivider';
+import AdminPanel      from './components/AdminPanel';
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
+  const [heroImageUrl, setHeroImageUrl] = useState(null);
+
+  /* ── Fetch custom hero image from backend on mount ── */
+  useEffect(() => {
+    fetch('http://localhost:3001/api/hero-image')
+      .then(r => r.json())
+      .then(d => {
+        if (d.url) setHeroImageUrl(`http://localhost:3001${d.url}`);
+      })
+      .catch(() => {}); // silently fall back to default if backend is offline
+  }, []);
 
   /* ── Lenis smooth scroll ── */
   useEffect(() => {
@@ -56,6 +68,9 @@ export default function App() {
         {!loaded && <Loader key="loader" onDone={() => setLoaded(true)} />}
       </AnimatePresence>
 
+      {/* Admin panel — always mounted, triggered by Shift+Ctrl+A */}
+      <AdminPanel onHeroImageChange={setHeroImageUrl} />
+
       {/* Main site — fades in after loader */}
       <AnimatePresence>
         {loaded && (
@@ -68,7 +83,7 @@ export default function App() {
             <Navbar   scrollTo={scrollTo} />
 
             {/* ── HERO ─────────────────────────────── */}
-            <Hero     scrollTo={scrollTo} />
+            <Hero     scrollTo={scrollTo} heroImageUrl={heroImageUrl} />
 
             {/* Hero → Marquee  (dark green → deep green) */}
             <SectionDivider fromColor="#060f0a" toColor="#060d08" variant="wave" height={80} />

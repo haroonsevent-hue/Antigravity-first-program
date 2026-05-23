@@ -1,7 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const items = [
+const API_BASE = 'http://localhost:3001';
+
+const hardcodedItems = [
   { src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80', tag: 'Wedding',    title: 'Royal Celebration',   cat: 'wedding' },
   { src: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=900&q=80', tag: 'Corporate',  title: 'Gala Night',          cat: 'corporate' },
   { src: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=900&q=80', tag: 'Engagement', title: 'Emerald Evening',      cat: 'wedding' },
@@ -19,7 +21,7 @@ const filters = [
   { label: 'Social',    value: 'social' },
 ];
 
-function GalleryItem({ item, index }) {
+function GalleryItem({ item, index, isUploaded }) {
   const [hovered, setHovered] = useState(false);
   const isLarge = index === 0;
 
@@ -40,6 +42,21 @@ function GalleryItem({ item, index }) {
         cursor: 'none',
       }}
     >
+      {/* "Latest" badge for uploaded images */}
+      {isUploaded && (
+        <div style={{
+          position: 'absolute', top: 20, right: 20, zIndex: 5,
+          background: 'linear-gradient(135deg, rgba(197,160,89,0.9), rgba(226,201,138,0.9))',
+          backdropFilter: 'blur(8px)',
+          padding: '4px 12px', borderRadius: 40,
+          fontSize: 8, letterSpacing: '0.3em', textTransform: 'uppercase',
+          color: '#060f0a', fontWeight: 600,
+          boxShadow: '0 4px 16px rgba(197,160,89,0.3)',
+        }}>
+          ★ Latest
+        </div>
+      )}
+
       {/* Image */}
       <motion.img
         src={item.src}
@@ -49,7 +66,7 @@ function GalleryItem({ item, index }) {
         style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
       />
 
-      {/* Overlay */}
+      {/* Hover overlay */}
       <motion.div
         animate={{ opacity: hovered ? 1 : 0 }}
         transition={{ duration: 0.4 }}
@@ -79,7 +96,7 @@ function GalleryItem({ item, index }) {
         </motion.div>
       </motion.div>
 
-      {/* Tag badge (always visible) */}
+      {/* Tag badge */}
       <div style={{
         position: 'absolute', top: 20, left: 20,
         background: 'rgba(197,160,89,0.15)', backdropFilter: 'blur(10px)',
@@ -97,11 +114,34 @@ function GalleryItem({ item, index }) {
 
 export default function Gallery() {
   const [filter, setFilter] = useState('all');
-  const filtered = filter === 'all' ? items : items.filter(i => i.cat === filter);
+  const [uploadedItems, setUploadedItems] = useState([]);
+  const [loadingUploads, setLoadingUploads] = useState(true);
+
+  /* ── Fetch admin-uploaded gallery images ── */
+  useEffect(() => {
+    fetch(`${API_BASE}/api/gallery-images`)
+      .then(r => r.json())
+      .then(data => {
+        setUploadedItems(data.map(img => ({
+          ...img,
+          src: `${API_BASE}${img.src}`,
+          isUploaded: true,
+        })));
+      })
+      .catch(() => {})
+      .finally(() => setLoadingUploads(false));
+  }, []);
+
+  /* ── Merge: uploaded images first, then hardcoded ── */
+  const allItems = [...uploadedItems, ...hardcodedItems];
+  const filtered = filter === 'all'
+    ? allItems
+    : allItems.filter(i => i.cat === filter);
 
   return (
     <section id="gallery" style={{ padding: '140px 0', background: 'var(--green)', position: 'relative', overflow: 'hidden' }}>
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 40px' }}>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -113,6 +153,26 @@ export default function Gallery() {
           <span className="section-label" style={{ justifyContent: 'center' }}>Our Portfolio</span>
           <h2 className="section-title">Recent <em>Events</em></h2>
           <div className="gold-rule center" />
+
+          {/* Uploaded count badge */}
+          {uploadedItems.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                marginTop: 16,
+                background: 'rgba(197,160,89,0.1)',
+                border: '1px solid rgba(197,160,89,0.2)',
+                borderRadius: 40, padding: '6px 18px',
+              }}
+            >
+              <span style={{ fontSize: 8, color: 'var(--gold)', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+                ★ {uploadedItems.length} Latest Event{uploadedItems.length > 1 ? 's' : ''} Added
+              </span>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Filter tabs */}
@@ -141,6 +201,13 @@ export default function Gallery() {
           ))}
         </motion.div>
 
+        {/* Loading state */}
+        {loadingUploads && (
+          <div style={{ textAlign: 'center', padding: '20px 0', color: 'rgba(197,160,89,0.4)', fontSize: 12, letterSpacing: '0.2em' }}>
+            Loading gallery…
+          </div>
+        )}
+
         {/* Masonry grid */}
         <motion.div
           layout
@@ -153,7 +220,12 @@ export default function Gallery() {
         >
           <AnimatePresence mode="popLayout">
             {filtered.map((item, i) => (
-              <GalleryItem key={item.title} item={item} index={i} />
+              <GalleryItem
+                key={item.id || item.title}
+                item={item}
+                index={i}
+                isUploaded={!!item.isUploaded}
+              />
             ))}
           </AnimatePresence>
         </motion.div>

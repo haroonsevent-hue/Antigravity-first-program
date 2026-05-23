@@ -23,5 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# Ignore JDK
-backend/oracleJdk-26/
+# Ignore backend
+backend/

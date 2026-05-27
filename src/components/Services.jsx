@@ -116,7 +116,7 @@ function ServiceCard({ s, i, scrollTo }) {
         rotateX, rotateY,
         position: 'relative',
         padding: '52px 44px',
-        background: hovered ? 'rgba(255,255,255,0.025)' : 'rgba(255,255,255,0.015)',
+        background: hovered ? 'var(--card-hover-bg)' : 'var(--card-bg)',
         border: `1px solid ${hovered ? 'rgba(197,160,89,0.22)' : 'rgba(197,160,89,0.07)'}`,
         borderRadius: 2,
         overflow: 'hidden',
@@ -178,7 +178,7 @@ function ServiceCard({ s, i, scrollTo }) {
         <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 28, fontWeight: 400, color: 'var(--white)', marginBottom: 18, lineHeight: 1.15 }}>
           {s.title}
         </h3>
-        <p style={{ fontSize: 14, lineHeight: 1.85, color: 'rgba(255,255,255,0.42)', marginBottom: 36 }}>
+        <p style={{ fontSize: 14, lineHeight: 1.85, color: 'var(--text-dim)', marginBottom: 36 }}>
           {s.desc}
         </p>
 
@@ -236,7 +236,7 @@ export default function Services({ scrollTo }) {
           <span className="section-label">Our Expertise</span>
           <h2 className="section-title">Services We <em>Offer</em></h2>
           <div className="gold-rule" />
-          <p style={{ fontSize: 15, lineHeight: 1.9, color: 'rgba(255,255,255,0.35)', marginTop: 8 }}>
+          <p style={{ fontSize: 15, lineHeight: 1.9, color: 'var(--text-dim)', marginTop: 8 }}>
             Three decades of experience, five hundred unforgettable events, and one promise — your vision, perfected.
           </p>
         </motion.div>

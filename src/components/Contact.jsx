@@ -15,7 +15,7 @@ const WhatsAppIcon = () => (
 function Field({ label, required, children }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <label style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', fontWeight: 400, display: 'flex', alignItems: 'center', gap: 4 }}>
+      <label style={{ fontSize: 13, color: 'var(--text)', fontWeight: 400, display: 'flex', alignItems: 'center', gap: 4 }}>
         {label}
         {required && <span style={{ color: '#f87171', fontSize: 12 }}>*</span>}
       </label>
@@ -27,8 +27,8 @@ function Field({ label, required, children }) {
 const inputStyle = {
   width: '100%',
   padding: '14px 18px',
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(197,160,89,0.18)',
+  background: 'var(--input-bg)',
+  border: '1px solid var(--input-border)',
   borderRadius: 10,
   color: 'var(--white)',
   fontFamily: 'DM Sans, sans-serif',
@@ -78,7 +78,7 @@ export default function Contact() {
           <span className="section-label">Get in Touch</span>
           <h2 className="section-title">Let's Plan Your <em>Big Day</em></h2>
           <div className="gold-rule" />
-          <p style={{ fontSize: 15, lineHeight: 1.9, color: 'rgba(255,255,255,0.38)', marginBottom: 60, maxWidth: 420 }}>
+          <p style={{ fontSize: 15, lineHeight: 1.9, color: 'var(--text-dim)', marginBottom: 60, maxWidth: 420 }}>
             Ready to start planning? We offer free initial consultations to help bring your vision to life. Reach out — we'd love to hear your story.
           </p>
 
@@ -91,8 +91,8 @@ export default function Contact() {
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(197,160,89,0.1)',
+            background: 'var(--card-bg)',
+            border: '1px solid var(--input-border)',
             borderRadius: 16,
             padding: '48px 44px',
             position: 'relative',
@@ -114,8 +114,8 @@ export default function Contact() {
                 value={form.name}
                 onChange={update}
                 style={inputStyle}
-                onFocus={e => { e.target.style.borderColor = 'rgba(197,160,89,0.55)'; e.target.style.background = 'rgba(197,160,89,0.04)'; }}
-                onBlur={e => { e.target.style.borderColor = 'rgba(197,160,89,0.18)'; e.target.style.background = 'rgba(255,255,255,0.04)'; }}
+                onFocus={e => { e.target.style.borderColor = 'rgba(197,160,89,0.55)'; e.target.style.background = 'var(--input-focus-bg)'; }}
+                onBlur={e => { e.target.style.borderColor = 'var(--input-border)'; e.target.style.background = 'var(--input-bg)'; }}
               />
             </Field>
 
@@ -130,8 +130,8 @@ export default function Contact() {
                   value={form.email}
                   onChange={update}
                   style={inputStyle}
-                  onFocus={e => { e.target.style.borderColor = 'rgba(197,160,89,0.55)'; e.target.style.background = 'rgba(197,160,89,0.04)'; }}
-                  onBlur={e => { e.target.style.borderColor = 'rgba(197,160,89,0.18)'; e.target.style.background = 'rgba(255,255,255,0.04)'; }}
+                  onFocus={e => { e.target.style.borderColor = 'rgba(197,160,89,0.55)'; e.target.style.background = 'var(--input-focus-bg)'; }}
+                  onBlur={e => { e.target.style.borderColor = 'var(--input-border)'; e.target.style.background = 'var(--input-bg)'; }}
                 />
               </Field>
               <Field label="WhatsApp No." required>
@@ -143,8 +143,8 @@ export default function Contact() {
                   value={form.phone}
                   onChange={update}
                   style={inputStyle}
-                  onFocus={e => { e.target.style.borderColor = 'rgba(197,160,89,0.55)'; e.target.style.background = 'rgba(197,160,89,0.04)'; }}
-                  onBlur={e => { e.target.style.borderColor = 'rgba(197,160,89,0.18)'; e.target.style.background = 'rgba(255,255,255,0.04)'; }}
+                  onFocus={e => { e.target.style.borderColor = 'rgba(197,160,89,0.55)'; e.target.style.background = 'var(--input-focus-bg)'; }}
+                  onBlur={e => { e.target.style.borderColor = 'var(--input-border)'; e.target.style.background = 'var(--input-bg)'; }}
                 />
               </Field>
             </div>
@@ -156,17 +156,17 @@ export default function Contact() {
                 required
                 value={form.event}
                 onChange={update}
-                style={{ ...inputStyle, cursor: 'none', color: form.event ? 'var(--white)' : 'rgba(255,255,255,0.3)' }}
-                onFocus={e => { e.target.style.borderColor = 'rgba(197,160,89,0.55)'; e.target.style.background = 'rgba(197,160,89,0.04)'; }}
-                onBlur={e => { e.target.style.borderColor = 'rgba(197,160,89,0.18)'; e.target.style.background = 'rgba(255,255,255,0.04)'; }}
+                style={{ ...inputStyle, cursor: 'none', color: form.event ? 'var(--white)' : 'var(--text-dim)' }}
+                onFocus={e => { e.target.style.borderColor = 'rgba(197,160,89,0.55)'; e.target.style.background = 'var(--input-focus-bg)'; }}
+                onBlur={e => { e.target.style.borderColor = 'var(--input-border)'; e.target.style.background = 'var(--input-bg)'; }}
               >
-                <option value="" disabled style={{ background: '#0d2218' }}>Select Event Category</option>
-                <option value="Wedding" style={{ background: '#0d2218' }}>Wedding</option>
-                <option value="Engagement" style={{ background: '#0d2218' }}>Engagement</option>
-                <option value="Corporate Event" style={{ background: '#0d2218' }}>Corporate Event</option>
-                <option value="Birthday Party" style={{ background: '#0d2218' }}>Birthday Party</option>
-                <option value="Social Gathering" style={{ background: '#0d2218' }}>Social Gathering</option>
-                <option value="Other" style={{ background: '#0d2218' }}>Other</option>
+                <option value="" disabled style={{ background: 'var(--green3)' }}>Select Event Category</option>
+                <option value="Wedding" style={{ background: 'var(--green3)' }}>Wedding</option>
+                <option value="Engagement" style={{ background: 'var(--green3)' }}>Engagement</option>
+                <option value="Corporate Event" style={{ background: 'var(--green3)' }}>Corporate Event</option>
+                <option value="Birthday Party" style={{ background: 'var(--green3)' }}>Birthday Party</option>
+                <option value="Social Gathering" style={{ background: 'var(--green3)' }}>Social Gathering</option>
+                <option value="Other" style={{ background: 'var(--green3)' }}>Other</option>
               </select>
             </Field>
 
@@ -179,8 +179,8 @@ export default function Contact() {
                 value={form.message}
                 onChange={update}
                 style={{ ...inputStyle, resize: 'none' }}
-                onFocus={e => { e.target.style.borderColor = 'rgba(197,160,89,0.55)'; e.target.style.background = 'rgba(197,160,89,0.04)'; }}
-                onBlur={e => { e.target.style.borderColor = 'rgba(197,160,89,0.18)'; e.target.style.background = 'rgba(255,255,255,0.04)'; }}
+                onFocus={e => { e.target.style.borderColor = 'rgba(197,160,89,0.55)'; e.target.style.background = 'var(--input-focus-bg)'; }}
+                onBlur={e => { e.target.style.borderColor = 'var(--input-border)'; e.target.style.background = 'var(--input-bg)'; }}
               />
             </Field>
 

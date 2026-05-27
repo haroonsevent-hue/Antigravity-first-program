@@ -7,6 +7,7 @@ import Cursor   from './components/Cursor';
 import Loader   from './components/Loader';
 import Navbar   from './components/Navbar';
 import Hero     from './components/Hero';
+import About    from './components/About';
 import Marquee  from './components/Marquee';
 import Services from './components/Services';
 import Gallery  from './components/Gallery';
@@ -21,6 +22,20 @@ import AdminPanel      from './components/AdminPanel';
 export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [heroImageUrl, setHeroImageUrl] = useState(null);
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+
+  /* ── Theme management ── */
+  const toggleTheme = useCallback(() => {
+    setTheme(p => {
+      const next = p === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', next);
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   /* ── Fetch custom hero image from backend on mount ── */
   useEffect(() => {
@@ -80,54 +95,55 @@ export default function App() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Navbar   scrollTo={scrollTo} />
+            <Navbar   scrollTo={scrollTo} theme={theme} toggleTheme={toggleTheme} />
 
             {/* ── HERO ─────────────────────────────── */}
             <Hero     scrollTo={scrollTo} heroImageUrl={heroImageUrl} />
 
-            {/* Hero → Marquee  (dark green → deep green) */}
-            <SectionDivider fromColor="#060f0a" toColor="#060d08" variant="wave" height={80} />
-
+            {/* Hero → About: Marquee ticker band */}
             <Marquee />
 
-            {/* Marquee → Services  (marquee bg → slightly lighter) */}
-            <SectionDivider fromColor="#060d08" toColor="#0a1a12" variant="tilt" height={70} />
+            {/* ── ABOUT ────────────────────────────── */}
+            <About />
+
+            {/* About → Services */}
+            <SectionDivider fromColor="var(--green)" toColor="var(--green2)" variant="wave" height={70} />
 
             {/* ── SERVICES ─────────────────────────── */}
             <Services scrollTo={scrollTo} />
 
             {/* Services → Gallery  (services bg → gallery bg) */}
-            <SectionDivider fromColor="#0a1a12" toColor="#080f0b" variant="double" height={90} />
+            <SectionDivider fromColor="var(--green2)" toColor="var(--green)" variant="double" height={90} />
 
             {/* ── GALLERY ──────────────────────────── */}
             <Gallery />
 
             {/* Gallery → Stats  (gallery → gradient start) */}
-            <SectionDivider fromColor="#080f0b" toColor="#0a1a12" variant="arc" height={80} />
+            <SectionDivider fromColor="var(--green)" toColor="var(--green2)" variant="arc" height={80} />
 
             {/* ── STATS ────────────────────────────── */}
             <Stats />
 
             {/* Stats → Process */}
-            <SectionDivider fromColor="#122b1e" toColor="#080f0b" variant="wave" height={90} />
+            <SectionDivider fromColor="var(--green4)" toColor="var(--green)" variant="wave" height={90} />
 
             {/* ── PROCESS ──────────────────────────── */}
             <Process />
 
             {/* Process → Reviews */}
-            <SectionDivider fromColor="#080f0b" toColor="#0a1a12" variant="tilt" height={70} flip />
+            <SectionDivider fromColor="var(--green)" toColor="var(--green2)" variant="tilt" height={70} flip />
 
             {/* ── REVIEWS ──────────────────────────── */}
             <Reviews />
 
             {/* Reviews → Contact */}
-            <SectionDivider fromColor="#0a1a12" toColor="#080f0b" variant="double" height={90} />
+            <SectionDivider fromColor="var(--green2)" toColor="var(--green)" variant="double" height={90} />
 
             {/* ── CONTACT ──────────────────────────── */}
             <Contact />
 
             {/* Contact → Footer */}
-            <SectionDivider fromColor="#080f0b" toColor="#060d08" variant="wave" height={70} flip />
+            <SectionDivider fromColor="var(--green)" toColor="var(--footer-bg)" variant="wave" height={70} flip />
 
             <Footer   scrollTo={scrollTo} />
           </motion.div>

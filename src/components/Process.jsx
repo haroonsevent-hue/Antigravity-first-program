@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 const steps = [
@@ -50,14 +50,33 @@ const steps = [
 
 export default function Process() {
   const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
-  const lineWidth = useTransform(scrollYProgress, [0.1, 0.8], ['0%', '100%']);
+  const pathRef = useRef(null);
+  const [pathLength, setPathLength] = useState(0);
+
+  const { scrollYProgress } = useScroll({ 
+    target: sectionRef, 
+    offset: ['start end', 'end start'] 
+  });
+
+  // Calculate length of the wavy path for SVG dash offset
+  useEffect(() => {
+    if (pathRef.current) {
+      setPathLength(pathRef.current.getTotalLength());
+    }
+  }, []);
+
+  // Map scroll progress to draw the timeline path and spark position
+  const drawOffset = useTransform(scrollYProgress, [0.15, 0.7], [pathLength, 0]);
+  const sparkOffset = useTransform(scrollYProgress, [0.15, 0.7], [pathLength, -20]);
+
+  // Curved wavy path SVG coordinate (connecting centers of the 4 circles)
+  const pathData = 'M 150 50 C 300 0, 300 100, 450 50 C 600 0, 600 100, 750 50 C 900 0, 900 100, 1050 50';
 
   return (
     <section
       id="process"
       ref={sectionRef}
-      style={{ padding: '140px 0', background: '#060d09', position: 'relative', overflow: 'hidden' }}
+      style={{ padding: '140px 0', background: 'var(--green)', position: 'relative', overflow: 'hidden' }}
     >
       {/* Ambient glow */}
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '80%', height: '60%', background: 'radial-gradient(ellipse, rgba(197,160,89,0.04), transparent 70%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
@@ -76,14 +95,64 @@ export default function Process() {
           <div className="gold-rule center" />
         </motion.div>
 
-        {/* Timeline */}
+        {/* Timeline container */}
         <div style={{ position: 'relative' }}>
-          {/* Animated progress line */}
-          <div style={{ position: 'absolute', top: 48, left: 0, right: 0, height: 1, background: 'rgba(197,160,89,0.1)', zIndex: 0 }}>
-            <motion.div style={{ height: '100%', background: 'linear-gradient(to right, var(--gold-dk), var(--gold))', width: lineWidth, boxShadow: '0 0 12px rgba(197,160,89,0.4)' }} />
+          
+          {/* ── Curved Wavy SVG Timeline Line ── */}
+          <div className="timeline-svg-container" style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 100, zIndex: 0, pointerEvents: 'none' }}>
+            <svg
+              viewBox="0 0 1200 100"
+              preserveAspectRatio="none"
+              style={{ width: '100%', height: '100%', overflow: 'visible' }}
+            >
+              <defs>
+                <linearGradient id="sparkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(226,201,138,0)" />
+                  <stop offset="50%" stopColor="rgba(226,201,138,0.7)" />
+                  <stop offset="100%" stopColor="#C5A059" />
+                </linearGradient>
+              </defs>
+
+              {/* Background Path Track */}
+              <path
+                d={pathData}
+                fill="none"
+                stroke="rgba(197,160,89,0.08)"
+                strokeWidth="1.5"
+              />
+
+              {/* Scroll-drawing progress path */}
+              <motion.path
+                ref={pathRef}
+                d={pathData}
+                fill="none"
+                stroke="rgba(197,160,89,0.35)"
+                strokeWidth="2"
+                strokeDasharray={pathLength || 1000}
+                style={{
+                  strokeDashoffset: drawOffset
+                }}
+              />
+
+              {/* Traveling light spark VFX */}
+              {pathLength > 0 && (
+                <motion.path
+                  d={pathData}
+                  fill="none"
+                  stroke="url(#sparkGradient)"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  strokeDasharray="25 1200" // A 25px long spark, followed by large gap
+                  style={{
+                    strokeDashoffset: sparkOffset
+                  }}
+                />
+              )}
+            </svg>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 40, position: 'relative', zIndex: 1 }}>
+          {/* Steps Grid */}
+          <div className="process-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 40, position: 'relative', zIndex: 1 }}>
             {steps.map((step, i) => (
               <motion.div
                 key={step.num}
@@ -95,34 +164,35 @@ export default function Process() {
               >
                 {/* Icon circle */}
                 <motion.div
-                  whileHover={{ scale: 1.1, boxShadow: '0 0 40px rgba(197,160,89,0.3)' }}
+                  whileHover={{ scale: 1.08, boxShadow: '0 0 35px rgba(197,160,89,0.3)' }}
                   transition={{ duration: 0.3 }}
                   style={{
                     width: 96, height: 96, borderRadius: '50%',
                     background: 'var(--green)',
-                    border: '1px solid rgba(197,160,89,0.3)',
+                    border: '1px solid rgba(197,160,89,0.25)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     margin: '0 auto 36px',
                     color: 'var(--gold)',
                     position: 'relative',
-                    boxShadow: '0 0 20px rgba(197,160,89,0.08)',
+                    boxShadow: '0 0 20px rgba(197,160,89,0.06)',
                   }}
                 >
                   {step.icon}
                   {/* Step number badge */}
                   <div style={{
-                    position: 'absolute', top: -4, right: -4,
+                    position: 'absolute', top: -3, right: -3,
                     width: 24, height: 24, borderRadius: '50%',
                     background: 'var(--gold)', color: 'var(--green)',
                     fontFamily: 'Cinzel, serif', fontSize: 9, fontWeight: 700,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 4px 10px rgba(197,160,89,0.2)'
                   }}>
-                    {i + 1}
+                    {step.num}
                   </div>
                 </motion.div>
 
                 <h4 style={{ fontFamily: 'Cinzel, serif', fontSize: 16, color: 'var(--white)', marginBottom: 16, letterSpacing: '0.08em' }}>{step.title}</h4>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', lineHeight: 1.85 }}>{step.desc}</p>
+                <p style={{ fontSize: 13.5, color: 'var(--text-dim)', lineHeight: 1.8 }}>{step.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -131,13 +201,15 @@ export default function Process() {
 
       <style>{`
         @media (max-width: 900px) {
-          #process > div > div:last-child > div { grid-template-columns: repeat(2,1fr) !important; }
+          .process-grid { grid-template-columns: repeat(2,1fr) !important; }
+          .timeline-svg-container { display: none !important; } /* disable curved svg line when grid collapses to 2 columns */
         }
         @media (max-width: 500px) {
           #process > div { padding: 0 24px !important; }
-          #process > div > div:last-child > div { grid-template-columns: 1fr !important; }
+          .process-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>
   );
 }
+

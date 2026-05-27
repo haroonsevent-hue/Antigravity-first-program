@@ -21,7 +21,7 @@ const socials = [
 
 export default function Footer({ scrollTo }) {
   return (
-    <footer id="socials" style={{ background: '#040c07', borderTop: '1px solid rgba(197,160,89,0.08)', position: 'relative', overflow: 'hidden' }}>
+    <footer id="socials" style={{ background: 'var(--footer-bg)', borderTop: '1px solid var(--input-border)', position: 'relative', overflow: 'hidden' }}>
       {/* Decorative gradient line */}
       <div style={{ position: 'absolute', top: 0, left: '15%', right: '15%', height: 1, background: 'linear-gradient(to right, transparent, rgba(197,160,89,0.25), transparent)' }} />
 
@@ -51,8 +51,8 @@ export default function Footer({ scrollTo }) {
             </div>
           </button>
 
-          <p style={{ fontSize: 14, lineHeight: 1.9, color: 'rgba(255,255,255,0.28)', maxWidth: 360, marginBottom: 36 }}>
-            Turning your special moments into lifelong memories. Full-service planning for weddings, corporate galas, and private celebrations since 1990.
+          <p style={{ fontSize: 14, lineHeight: 1.9, color: 'var(--text-dim)', maxWidth: 360, marginBottom: 36 }}>
+            Turning your special moments into lifelong memories. Full-service planning for weddings, corporate galas, and private celebrations since 1989.
           </p>
 
           <div style={{ display: 'flex', gap: 10 }}>
@@ -63,7 +63,7 @@ export default function Footer({ scrollTo }) {
                 title={s.label}
                 whileHover={{ borderColor: 'var(--gold)', color: 'var(--gold)', y: -3, background: 'rgba(197,160,89,0.08)' }}
                 transition={{ duration: 0.25 }}
-                style={{ width: 42, height: 42, border: '1px solid rgba(197,160,89,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.32)', borderRadius: 2 }}
+                style={{ width: 42, height: 42, border: '1px solid rgba(197,160,89,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-dim)', borderRadius: 2 }}
               >
                 {s.icon}
               </motion.a>
@@ -80,7 +80,7 @@ export default function Footer({ scrollTo }) {
               onClick={() => scrollTo(secMap[l])}
               whileHover={{ x: 5, color: 'var(--gold)' }}
               transition={{ duration: 0.2 }}
-              style={{ display: 'block', fontSize: 13, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', textAlign: 'left', marginBottom: 14, lineHeight: 1, padding: 0 }}
+              style={{ display: 'block', fontSize: 13, color: 'var(--text-dim)', background: 'none', border: 'none', textAlign: 'left', marginBottom: 14, lineHeight: 1, padding: 0 }}
             >
               {l}
             </motion.button>
@@ -95,7 +95,7 @@ export default function Footer({ scrollTo }) {
             { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>, text: '+91 9037874001\n+91 9567525723\n+91 9633772525' },
             { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>, text: 'haroonsevent@gmail.com' },
           ].map((item, i) => (
-            <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 18, fontSize: 13, color: 'rgba(255,255,255,0.28)' }}>
+            <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 18, fontSize: 13, color: 'var(--text-dim)' }}>
               <span style={{ color: 'var(--gold)', flexShrink: 0, marginTop: 2 }}>{item.icon}</span>
               <span style={{ whiteSpace: 'pre-line', lineHeight: 1.7 }}>{item.text}</span>
             </div>
@@ -104,8 +104,8 @@ export default function Footer({ scrollTo }) {
       </div>
 
       {/* Bottom bar */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', padding: '24px 60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
-        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.15)', letterSpacing: '0.05em' }}>
+      <div style={{ borderTop: '1px solid var(--input-border)', padding: '24px 60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+        <p style={{ fontSize: 11, color: 'var(--text-dim)', letterSpacing: '0.05em' }}>
           © 2025 Haroon's Weddings &amp; Events Management. All rights reserved.
         </p>
         <p style={{ fontSize: 10, color: 'rgba(197,160,89,0.25)', letterSpacing: '0.2em', textTransform: 'uppercase' }}>

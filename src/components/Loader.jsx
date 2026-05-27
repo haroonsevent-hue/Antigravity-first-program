@@ -146,7 +146,7 @@ export default function Loader({ onDone }) {
                 <span className="loader-percent" style={{ fontSize: 11 }}>
                   {String(pct).padStart(3, '0')}
                 </span>
-                <span className="loader-tagline">Est. 1990 · Kerala</span>
+                <span className="loader-tagline">Est. 1989 · Kerala</span>
               </div>
             </motion.div>
 

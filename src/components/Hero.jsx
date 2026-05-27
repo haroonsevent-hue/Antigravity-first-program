@@ -32,11 +32,12 @@ function AuroraCanvas() {
     }
 
     function drawAurora() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
       const blobs = [
-        { x: W * 0.15, y: H * 0.5,  r: W * 0.4,  c: 'rgba(197,160,89,0.035)' },
-        { x: W * 0.85, y: H * 0.35, r: W * 0.35, c: 'rgba(22,51,40,0.7)' },
-        { x: W * 0.5,  y: H * 0.85, r: W * 0.3,  c: 'rgba(197,160,89,0.02)' },
-        { x: W * 0.5,  y: H * 0.5,  r: W * 0.6,  c: 'rgba(8,15,11,0.4)' },
+        { x: W * 0.15, y: H * 0.5,  r: W * 0.4,  c: isLight ? 'rgba(197,160,89,0.02)' : 'rgba(197,160,89,0.035)' },
+        { x: W * 0.85, y: H * 0.35, r: W * 0.35, c: isLight ? 'rgba(197,160,89,0.05)' : 'rgba(22,51,40,0.7)' },
+        { x: W * 0.5,  y: H * 0.85, r: W * 0.3,  c: isLight ? 'rgba(197,160,89,0.015)' : 'rgba(197,160,89,0.02)' },
+        { x: W * 0.5,  y: H * 0.5,  r: W * 0.6,  c: isLight ? 'rgba(253,252,247,0.4)' : 'rgba(8,15,11,0.4)' },
       ];
       blobs.forEach(b => {
         const gx = b.x + Math.sin(t * 0.0006) * 80;
@@ -146,7 +147,7 @@ export default function Hero({ scrollTo, heroImageUrl }) {
       style={{ position: 'relative', height: '100vh', minHeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}
     >
       {/* Base bg */}
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, #020706 0%, #060f0a 45%, #08150f 100%)' }} />
+      <div style={{ position: 'absolute', inset: 0, background: 'var(--hero-bg)' }} />
 
       {/* Parallax hero media */}
       {heroImageUrl && (heroImageUrl.endsWith('.mp4') || heroImageUrl.endsWith('.webm')) ? (
@@ -173,7 +174,7 @@ export default function Hero({ scrollTo, heroImageUrl }) {
       )}
 
       {/* Radial vignette */}
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 20%, rgba(3,7,5,0.85) 100%)', zIndex: 3 }} />
+      <div style={{ position: 'absolute', inset: 0, background: 'var(--hero-overlay)', zIndex: 3 }} />
 
       {/* Mouse parallax orbs */}
       <ParallaxOrbs mousePos={mousePos} />
@@ -278,7 +279,7 @@ export default function Hero({ scrollTo, heroImageUrl }) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.8, duration: 0.8 }}
-          style={{ fontSize: 15, letterSpacing: '0.04em', lineHeight: 1.9, color: 'rgba(255,255,255,0.4)', maxWidth: 520, margin: '0 auto 52px' }}
+          style={{ fontSize: 15, letterSpacing: '0.04em', lineHeight: 1.9, color: 'var(--text-dim)', maxWidth: 520, margin: '0 auto 52px' }}
         >
           Premium wedding and event management services, tailored to your vision and crafted with devotion.
         </motion.p>
@@ -304,7 +305,7 @@ export default function Hero({ scrollTo, heroImageUrl }) {
         transition={{ delay: 2.4, duration: 1 }}
         style={{ position: 'absolute', bottom: 44, left: '50%', transform: 'translateX(-50%)', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}
       >
-        <span style={{ fontSize: 8, letterSpacing: '0.45em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>Scroll</span>
+        <span style={{ fontSize: 8, letterSpacing: '0.45em', textTransform: 'uppercase', color: 'var(--text-dim)' }}>Scroll</span>
         <div style={{ width: 1, height: 60, overflow: 'hidden', position: 'relative' }}>
           <motion.div
             animate={{ y: ['-100%', '100%'] }}

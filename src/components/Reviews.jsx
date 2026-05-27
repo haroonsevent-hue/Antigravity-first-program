@@ -1,108 +1,56 @@
-import { useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 
-const sectionHTML = `
-<section id="reviews-section" class="rv-section">
-  <div class="rv-dot-bg"></div>
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhtBle7BrR2Ip8Q_-rQI1Y3tTQ37PDxGdDyBXRnQimAOVFUANHwG7RStXeHJFvY5bHSQ/exec";
 
-  <div class="rv-container">
+const hardcodedReviews = [
+  { id: "hc-1", name: "Adnan & Fatima",      text: "Like walking onto a movie set. Absolutely breathtaking execution. They made our dream wedding a reality.",                                     rating: 5, eventType: "Wedding",        time: "10/28/2023 02:30 PM" },
+  { id: "hc-2", name: "TechSolutions",       text: "A masterpiece of corporate event planning. Professional, timely, and executed with absolute precision.",                                      rating: 5, eventType: "Corporate Event", time: "11/15/2023 10:00 AM" },
+  { id: "hc-3", name: "Sara & Rahul",        text: "The attention to detail is unmatched! Every guest was amazed by the aesthetic and arrangements.",                                            rating: 5, eventType: "Wedding",        time: "12/03/2023 06:00 PM" },
+  { id: "hc-4", name: "Priya & Arjun",       text: "Haroon's team made our traditional wedding a grand success. The best event managers in Kasala without a doubt!",                             rating: 5, eventType: "Wedding",        time: "01/14/2024 11:00 AM" },
+  { id: "hc-5", name: "Skyline Builders",    text: "Flawless execution for our annual meet. Highly recommend their corporate event services.",                                                   rating: 4, eventType: "Corporate Event", time: "02/05/2024 09:30 AM" },
+  { id: "hc-6", name: "Mohammed & Aisha",    text: "The decor, the coordination, the hospitality… everything was top notch. Thank you for making our day special.",                             rating: 5, eventType: "Wedding",        time: "03/22/2024 05:00 PM" },
+];
 
-    <!-- Header -->
-    <div class="rv-header reveal">
-      <span class="rv-eyebrow">Review &amp; Feedback</span>
-      <h2 class="rv-title">Client Stories</h2>
-      <div class="rv-title-bar"></div>
-    </div>
+function generateUUID() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
 
-    <!-- Loader -->
-    <div id="reviews-loader" class="rv-loader-wrap hidden">
-      <div class="rv-spinner"></div>
-      <p class="rv-loader-text">Loading Reviews…</p>
-    </div>
+function isValidName(text) {
+  const nameRegex = /^[a-zA-Z\s\.&]+$/;
+  const noRepeat = !/(.)\1{2,}/.test(text);
+  return nameRegex.test(text) && text.trim().length >= 2 && noRepeat;
+}
 
-    <!-- Cards Grid -->
-    <div id="testimonials-grid" class="rv-grid"></div>
+function isValidMessage(text) {
+  if (text.length < 4) return false;
+  if (!/[aeiouyAEIOUY]/.test(text)) return false;
+  if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{6,}/.test(text)) return false;
+  if (/(.)\1{3,}/.test(text)) return false;
+  return true;
+}
 
-    <!-- See More / See Less toggle -->
-    <div id="see-more-container" class="rv-toggle-wrap hidden">
-      <button onclick="toggleSeeMore()" id="see-more-btn" class="rv-toggle-btn">See More Stories</button>
-    </div>
-    <div id="see-less-container" class="rv-toggle-wrap hidden">
-      <button onclick="toggleSeeLess()" id="see-less-btn" class="rv-toggle-btn">See Less Stories</button>
-    </div>
-
-    <!-- Rating Form -->
-    <div class="rv-form-wrap reveal">
-      <h3 class="rv-form-title" id="form-title">Rate Our Performance</h3>
-
-      <div class="rv-stars-row" id="star-container" onmouseleave="highlightStars(currentRating)">
-        <button onclick="setRating(1,true)" onmouseenter="highlightStars(1)" class="rv-star-btn">
-          <svg id="star-1" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </button>
-        <button onclick="setRating(2,true)" onmouseenter="highlightStars(2)" class="rv-star-btn">
-          <svg id="star-2" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </button>
-        <button onclick="setRating(3,true)" onmouseenter="highlightStars(3)" class="rv-star-btn">
-          <svg id="star-3" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </button>
-        <button onclick="setRating(4,true)" onmouseenter="highlightStars(4)" class="rv-star-btn">
-          <svg id="star-4" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </button>
-        <button onclick="setRating(5,true)" onmouseenter="highlightStars(5)" class="rv-star-btn">
-          <svg id="star-5" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </button>
-      </div>
-
-      <div id="rating-text" class="rv-rating-label"></div>
-
-      <form id="review-form" class="rv-form hidden">
-        <input type="hidden" name="action"   id="form-action" value="create">
-        <input type="hidden" name="edit_id"  id="edit-id"    value="">
-
-        <input  type="text"  name="name"     id="review-name"       required
-                placeholder="Your Name"
-                class="rv-input" />
-
-        <div class="rv-select-wrap">
-          <select name="event_type" id="review-event-type" required onchange="toggleOtherInput(this)" class="rv-select">
-            <option value="" disabled selected>Select Event Type</option>
-            <option value="Wedding">Wedding</option>
-            <option value="Corporate Event">Corporate Event</option>
-            <option value="Birthday Party">Birthday Party</option>
-            <option value="Other">Other (Please Specify)</option>
-          </select>
-          <div class="rv-select-arrow">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </div>
-        </div>
-
-        <div id="other-event-container" class="hidden">
-          <input type="text" id="other-event-input" placeholder="Specify your event…" class="rv-input rv-input-other" />
-        </div>
-
-        <textarea name="message" id="review-message" required rows="3"
-                  placeholder="Tell us about your experience…"
-                  class="rv-textarea"></textarea>
-
-        <button type="submit" id="submit-btn" class="rv-submit-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2z"/></svg>
-          <span id="submit-text">Submit Script</span>
-        </button>
-        <button type="button" id="cancel-edit-btn" onclick="cancelEdit()" class="rv-cancel-btn hidden">Cancel Edit</button>
-      </form>
-    </div>
-
-  </div>
-</section>
-`;
+function triggerGoldShower() {
+  const colors = ['#C5A059','#FFD700','#DAA520','#F0E68C'];
+  const end = Date.now() + 3500;
+  const iv = setInterval(() => {
+    if (Date.now() > end) { clearInterval(iv); return; }
+    for (let i = 0; i < 8; i++) {
+      const c = document.createElement('div');
+      c.className = 'rv-confetti';
+      c.style.cssText = `left:${Math.random()*100}vw;animation-duration:${Math.random()*1.5+1.5}s;background:${colors[Math.floor(Math.random()*4)]};width:${Math.random()*7+4}px;height:${Math.random()*7+4}px;`;
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 3200);
+    }
+  }, 100);
+}
 
 const sectionCSS = `
   /* ── Section Shell ────────────────────────────────────────────────── */
   .rv-section {
     position: relative;
     padding: 96px 0;
-    background: #0d2d1f;
-    color: #fff;
-    border-top: 1px solid rgba(255,255,255,.08);
+    background: var(--green2);
+    color: var(--text);
+    border-top: 1px solid var(--input-border);
     overflow: hidden;
     font-family: 'DM Sans', sans-serif;
   }
@@ -147,13 +95,14 @@ const sectionCSS = `
     opacity: 0.7;
   }
   .rv-title {
-    font-family: 'Playfair Display', 'Georgia', serif;
-    font-size: clamp(2.6rem, 5vw, 3.8rem);
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
     font-weight: 400;
-    color: #fff;
+    color: var(--white);
     margin: 0;
-    letter-spacing: -.01em;
-    line-height: 1.1;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    line-height: 1.2;
   }
   .rv-title-bar { display: none; }
 
@@ -161,7 +110,7 @@ const sectionCSS = `
   .rv-loader-wrap { text-align: center; padding: 24px 0; }
   .rv-spinner {
     width: 22px; height: 22px;
-    border: 3px solid #1a4f3d;
+    border: 3px solid var(--green3);
     border-top-color: #C5A059;
     border-radius: 50%;
     animation: rv-spin 1s linear infinite;
@@ -182,8 +131,8 @@ const sectionCSS = `
 
   /* ── Card ────────────────────────────────────────────────── */
   .rv-card {
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(255,255,255,.1);
+    background: var(--card-bg);
+    border: 1px solid var(--input-border);
     border-radius: 14px;
     padding: 24px 22px 22px;
     display: flex;
@@ -203,7 +152,7 @@ const sectionCSS = `
     font-family: 'Cormorant Garamond', serif;
     font-size: 19px;
     line-height: 1.75;
-    color: rgba(255,255,255,.75);
+    color: var(--white);
     font-style: italic;
     flex: 1;
   }
@@ -217,7 +166,7 @@ const sectionCSS = `
     font-family: 'DM Sans', sans-serif;
     font-size: 14px;
     font-weight: 400;
-    color: #fff;
+    color: var(--white);
     margin: 0;
   }
   .rv-card-type {
@@ -236,15 +185,15 @@ const sectionCSS = `
     font-family: 'DM Sans', sans-serif;
     font-size: 9px;
     font-weight: 300;
-    color: rgba(255,255,255,.22);
+    color: var(--text-dim);
   }
 
   /* Kebab menu */
   .kebab-wrap { position: absolute; top: 10px; right: 10px; z-index: 200; }
   .kebab-btn { background: none; border: none; cursor: pointer; color: #C5A059; opacity: .65; padding: 4px; display: flex; align-items: center; transition: opacity .2s; }
   .kebab-btn:hover { opacity: 1; }
-  .menu-dropdown { position: absolute; top: calc(100% + 4px); right: 0; background: #0a2416; border: 1px solid #C5A059; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.55); min-width: 120px; overflow: hidden; }
-  .menu-item { display: block; width: 100%; text-align: left; padding: 10px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 300; color: #fff; background: none; border: none; cursor: pointer; transition: background .15s, color .15s; }
+  .menu-dropdown { position: absolute; top: calc(100% + 4px); right: 0; background: var(--green3); border: 1px solid var(--input-border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.55); min-width: 120px; overflow: hidden; }
+  .menu-item { display: block; width: 100%; text-align: left; padding: 10px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 300; color: var(--white); background: none; border: none; cursor: pointer; transition: background .15s, color .15s; }
   .menu-item:hover { background: rgba(197,160,89,.15); color: #C5A059; }
 
   /* ── Toggle button ────────────────────────────────────────────────── */
@@ -267,20 +216,22 @@ const sectionCSS = `
 
   /* ── Form wrapper ────────────────────────────────────────────────── */
   .rv-form-wrap {
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(197,160,89,.25);
+    background: var(--card-bg);
+    border: 1px solid var(--input-border);
     border-radius: 18px;
     padding: 40px 36px 36px;
     backdrop-filter: blur(10px);
   }
   .rv-form-title {
     text-align: center;
-    font-family: 'Playfair Display', 'Georgia', serif;
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #C5A059;
+    font-family: 'Cinzel', 'Playfair Display', 'Georgia', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #dcb36a;
     margin: 0 0 20px;
-    letter-spacing: .03em;
+    letter-spacing: 0.2em;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
   }
   .rv-stars-row {
     display: flex;
@@ -310,9 +261,9 @@ const sectionCSS = `
     width: 100%;
     padding: 14px 18px;
     border-radius: 10px;
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(197,160,89,.18);
-    color: #fff;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--white);
     font-family: 'DM Sans', sans-serif;
     font-size: 14px;
     font-weight: 300;
@@ -320,8 +271,8 @@ const sectionCSS = `
     transition: border-color .3s, background .3s;
     box-sizing: border-box;
   }
-  .rv-input::placeholder, .rv-textarea::placeholder { color: rgba(255,255,255,.28); font-weight: 300; }
-  .rv-input:focus, .rv-textarea:focus { border-color: rgba(197,160,89,.55); background: rgba(197,160,89,.04); }
+  .rv-input::placeholder, .rv-textarea::placeholder { color: var(--text-dim); font-weight: 300; }
+  .rv-input:focus, .rv-textarea:focus { border-color: rgba(197,160,89,.55); background: var(--input-focus-bg); }
   .rv-textarea { resize: none; }
   .rv-input-other { border-left: 3px solid #C5A059; }
 
@@ -330,9 +281,9 @@ const sectionCSS = `
     width: 100%;
     padding: 14px 40px 14px 18px;
     border-radius: 10px;
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(197,160,89,.18);
-    color: #fff;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--white);
     font-family: 'DM Sans', sans-serif;
     font-size: 14px;
     font-weight: 300;
@@ -342,15 +293,15 @@ const sectionCSS = `
     transition: border-color .3s, background .3s;
     box-sizing: border-box;
   }
-  .rv-select:focus { border-color: rgba(197,160,89,.55); background: rgba(197,160,89,.04); }
-  .rv-select option { background: #0d2d1f; }
+  .rv-select:focus { border-color: rgba(197,160,89,.55); background: var(--input-focus-bg); }
+  .rv-select option { background: var(--green3); color: var(--white); }
   .rv-select-arrow {
     pointer-events: none;
     position: absolute;
     right: 16px;
     top: 50%;
     transform: translateY(-50%);
-    color: rgba(255,255,255,.3);
+    color: var(--text-dim);
   }
 
   .rv-submit-btn {
@@ -361,7 +312,7 @@ const sectionCSS = `
     gap: 10px;
     padding: 15px;
     background: #C5A059;
-    color: #0d2d1f;
+    color: var(--green);
     border: none;
     border-radius: 10px;
     font-size: 12px;
@@ -375,313 +326,459 @@ const sectionCSS = `
   .rv-submit-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
   .rv-cancel-btn {
-    background: none; border: none; color: rgba(255,255,255,.4);
+    background: none; border: none; color: var(--text-dim);
     font-size: 12px; cursor: pointer; text-decoration: underline;
     transition: color .2s; margin-top: 4px; align-self: center;
   }
-  .rv-cancel-btn:hover { color: #fff; }
+  .rv-cancel-btn:hover { color: var(--white); }
 
   /* ── Confetti ────────────────────────────────────────────────── */
   @keyframes rv-fall { 0%{transform:translateY(-10vh) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
   .rv-confetti { position:fixed; top:-10px; z-index:9999; pointer-events:none; border-radius:2px; animation:rv-fall linear forwards; }
 
-  /* ── Reveal ──────────────────────────────────────────────────── */
-  .reveal { opacity:0; transform:translateY(24px); transition:all .7s cubic-bezier(.5,0,0,1); }
-  .reveal.active { opacity:1; transform:translateY(0); }
   .hidden { display:none !important; }
 `;
 
-const sectionJS = `
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhtBle7BrR2Ip8Q_-rQI1Y3tTQ37PDxGdDyBXRnQimAOVFUANHwG7RStXeHJFvY5bHSQ/exec";
+export default function Reviews() {
+  const [globalReviews, setGlobalReviews] = useState([]);
+  const [myReviews, setMyReviews] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('my_reviews') || '[]');
+    } catch {
+      return [];
+    }
+  });
+  const [loading, setLoading] = useState(false);
+  const [currentRating, setCurrentRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
 
-  let currentRating = 0;
-  let isExpanded = false;
-  let globalReviews = [];
-  let myReviews = JSON.parse(localStorage.getItem('my_reviews') || '[]');
+  // Form states
+  const [formAction, setFormAction] = useState('create');
+  const [editId, setEditId] = useState('');
+  const [name, setName] = useState('');
+  const [message, setMessage] = useState('');
+  const [eventType, setEventType] = useState('');
+  const [otherEventType, setOtherEventType] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const hardcodedReviews = [
-    { name: "Adnan & Fatima",      text: "Like walking onto a movie set. Absolutely breathtaking execution. They made our dream wedding a reality.",                                     rating: 5, eventType: "Wedding",        time: "10/28/2023 02:30 PM" },
-    { name: "TechSolutions",       text: "A masterpiece of corporate event planning. Professional, timely, and executed with absolute precision.",                                      rating: 5, eventType: "Corporate Event", time: "11/15/2023 10:00 AM" },
-    { name: "Sara & Rahul",        text: "The attention to detail is unmatched! Every guest was amazed by the aesthetic and arrangements.",                                            rating: 5, eventType: "Wedding",        time: "12/03/2023 06:00 PM" },
-    { name: "Priya & Arjun",       text: "Haroon's team made our traditional wedding a grand success. The best event managers in Kasala without a doubt!",                             rating: 5, eventType: "Wedding",        time: "01/14/2024 11:00 AM" },
-    { name: "Skyline Builders",    text: "Flawless execution for our annual meet. Highly recommend their corporate event services.",                                                   rating: 4, eventType: "Corporate Event", time: "02/05/2024 09:30 AM" },
-    { name: "Mohammed & Aisha",    text: "The decor, the coordination, the hospitality… everything was top notch. Thank you for making our day special.",                             rating: 5, eventType: "Wedding",        time: "03/22/2024 05:00 PM" },
-  ];
+  // Kebab menu state
+  const [activeMenuId, setActiveMenuId] = useState(null);
 
-  function generateUUID() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
-
-  function isValidName(text) {
-    const nameRegex = /^[a-zA-Z\\s\\.&]+$/;
-    const noRepeat = !/(.)\\1{2,}/.test(text);
-    return nameRegex.test(text) && text.trim().length >= 2 && noRepeat;
-  }
-  function isValidMessage(text) {
-    if (text.length < 4) return false;
-    if (!/[aeiouyAEIOUY]/.test(text)) return false;
-    if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{6,}/.test(text)) return false;
-    if (/(.)\\1{3,}/.test(text)) return false;
-    return true;
-  }
-
-  function fetchReviews() {
-    const loader = document.getElementById('reviews-loader');
-    if (loader) loader.classList.remove('hidden');
+  // Fetch reviews on mount
+  useEffect(() => {
+    setLoading(true);
     fetch(GOOGLE_SCRIPT_URL)
       .then(r => r.json())
       .then(data => {
-        globalReviews = data.filter(r => isValidName(r.name) && isValidMessage(r.text));
-        globalReviews.reverse();
-        loadReviews();
+        const valid = data.filter(r => isValidName(r.name) && isValidMessage(r.text));
+        valid.reverse();
+        setGlobalReviews(valid);
       })
-      .catch(() => loadReviews())
-      .finally(() => { if (loader) loader.classList.add('hidden'); });
-  }
-
-  function loadReviews() {
-    const grid = document.getElementById('testimonials-grid');
-    if (!grid) return;
-    grid.innerHTML = '';
-    const all = [...globalReviews, ...hardcodedReviews];
-    all.forEach((review, i) => grid.appendChild(createCard(review, i)));
-    updateVisibility();
-  }
-
-  function createCard(review, index) {
-    const el = document.createElement('div');
-    el.className = 'rv-card';
-    el.dataset.index = index;
-
-    const isMine = myReviews.some(m => m.id === review.id);
-    const menuHtml = isMine ? buildMenu(review) : '';
-
-    const stars = '★'.repeat(Math.min(parseInt(review.rating) || 5, 5));
-    let displayTime = review.time || review.date || '';
-    if (displayTime && displayTime.includes('T')) displayTime = new Date(displayTime).toLocaleString();
-
-    el.innerHTML = \`
-      \${menuHtml}
-      <div class="rv-card-stars">\${stars}</div>
-      <p class="rv-card-text">"\${review.text}"</p>
-      <div class="rv-card-divider"></div>
-      <p class="rv-card-name">\${review.name}</p>
-      <p class="rv-card-type">\${review.eventType}</p>
-      \${displayTime ? \`<span class="rv-card-time">\${displayTime}</span>\` : ''}
-    \`;
-    return el;
-  }
-
-  function buildMenu(review) {
-    const entry = myReviews.find(m => m.id === review.id);
-    const canDelete = entry && (Date.now() - entry.timestamp) < 3600000;
-    const deleteBtn = canDelete
-      ? \`<button onclick="deleteReview('\${review.id}')" class="menu-item" style="color:#f87171">🗑 Delete</button>\`
-      : '';
-    return \`
-      <div class="kebab-wrap">
-        <button class="kebab-btn" onclick="toggleCardMenu(this)" title="Options">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="12" cy="18" r="2"/></svg>
-        </button>
-        <div class="menu-dropdown hidden">
-          <button onclick="editReview('\${review.id}','\${review.name}','\${review.text.replace(/'/g,"'")}','\${review.rating}','\${review.eventType}')" class="menu-item">✏️ Edit</button>
-          \${deleteBtn}
-        </div>
-      </div>
-    \`;
-  }
-
-  function toggleCardMenu(btn) {
-    const dropdown = btn.nextElementSibling;
-    const isHidden = dropdown.classList.contains('hidden');
-    // Close all open dropdowns first
-    document.querySelectorAll('.menu-dropdown').forEach(el => el.classList.add('hidden'));
-    // Open this one if it was closed
-    if (isHidden) dropdown.classList.remove('hidden');
-  }
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.kebab-wrap'))
-      document.querySelectorAll('.menu-dropdown').forEach(el => el.classList.add('hidden'));
-  });
-
-  function updateVisibility() {
-    const cards = [...document.querySelectorAll('.rv-card')];
-    const isMobile = window.innerWidth < 700;
-    const limit = isMobile ? 3 : 6;
-    let hidden = 0;
-    cards.forEach((c, i) => {
-      if (isExpanded || i < limit) c.classList.remove('hidden');
-      else { c.classList.add('hidden'); hidden++; }
-    });
-    const more = document.getElementById('see-more-container');
-    const less = document.getElementById('see-less-container');
-    if (hidden > 0 && !isExpanded) { more?.classList.remove('hidden'); less?.classList.add('hidden'); }
-    else if (isExpanded)            { more?.classList.add('hidden');    less?.classList.remove('hidden'); }
-    else                            { more?.classList.add('hidden');    less?.classList.add('hidden'); }
-  }
-  function toggleSeeMore() { isExpanded = true;  updateVisibility(); }
-  function toggleSeeLess()  {
-    isExpanded = false; updateVisibility();
-    document.getElementById('testimonials-grid')?.scrollIntoView({ behavior:'smooth', block:'start' });
-  }
-  window.addEventListener('resize', updateVisibility);
-
-  function highlightStars(n) {
-    for (let i = 1; i <= 5; i++) {
-      const svg = document.getElementById(\`star-\${i}\`);
-      if (!svg) continue;
-      if (i <= n) { svg.setAttribute('fill','#C5A059'); svg.setAttribute('stroke','#C5A059'); }
-      else         { svg.setAttribute('fill','none');    svg.setAttribute('stroke','#6B7280'); }
-    }
-  }
-
-  function setRating(n, isUserAction = false) {
-    currentRating = n;
-    highlightStars(n);
-    const label = document.getElementById('rating-text');
-    if (label) label.innerText = n ? \`You selected \${n} star\${n > 1 ? 's' : ''}\` : '';
-    const form = document.getElementById('review-form');
-    if (form) { form.classList.remove('hidden'); }
-    if (isUserAction && n === 5) triggerGoldShower();
-  }
-
-  function triggerGoldShower() {
-    const colors = ['#C5A059','#FFD700','#DAA520','#F0E68C'];
-    const end = Date.now() + 3500;
-    const iv = setInterval(() => {
-      if (Date.now() > end) { clearInterval(iv); return; }
-      for (let i = 0; i < 8; i++) {
-        const c = document.createElement('div');
-        c.className = 'rv-confetti';
-        c.style.cssText = \`left:\${Math.random()*100}vw;animation-duration:\${Math.random()*1.5+1.5}s;background:\${colors[Math.floor(Math.random()*4)]};width:\${Math.random()*7+4}px;height:\${Math.random()*7+4}px;\`;
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), 3200);
-      }
-    }, 100);
-  }
-
-  // Form submit
-  const reviewForm = document.getElementById('review-form');
-  if (reviewForm) {
-    reviewForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const submitBtn = document.getElementById('submit-btn');
-      const submitText = document.getElementById('submit-text');
-      submitBtn.disabled = true; submitText.innerText = 'Processing…';
-
-      const fd = new FormData(reviewForm);
-      const action  = document.getElementById('form-action').value;
-      const editId  = document.getElementById('edit-id').value;
-      const name    = fd.get('name');
-      const message = fd.get('message');
-      let   evType  = document.getElementById('review-event-type').value;
-      const otherIn = document.getElementById('other-event-input');
-
-      if (!isValidName(name))    { alert('Invalid Name (letters only, min 2 chars).'); document.getElementById('review-name').focus(); reset(); return; }
-      if (!isValidMessage(message)) { alert('Invalid Message (min 4 chars).'); document.getElementById('review-message').focus(); reset(); return; }
-      if (evType === 'Other') evType = otherIn.value.trim();
-
-      const params = new URLSearchParams();
-      params.append('action', action);
-      params.append('name', name);
-      params.append('text', message);
-      params.append('rating', currentRating);
-      params.append('eventType', evType);
-      params.append('time', new Date().toLocaleString());
-
-      let finalId = editId;
-      if (action === 'create') { finalId = generateUUID(); params.append('id', finalId); }
-      else                     { params.append('id', editId); }
-
-      fetch(GOOGLE_SCRIPT_URL, { method:'POST', body:params, mode:'no-cors' })
-        .then(() => {
-          alert(action === 'create' ? 'Review Submitted!' : 'Review Updated!');
-          if (action === 'create') {
-            myReviews.push({ id: finalId, timestamp: Date.now() });
-            localStorage.setItem('my_reviews', JSON.stringify(myReviews));
-            globalReviews.unshift({ id:finalId, name, text:message, rating:currentRating, eventType:evType, time:new Date().toLocaleString() });
-            if (currentRating >= 4) triggerGoldShower();
-          } else {
-            const idx = globalReviews.findIndex(r => r.id === finalId);
-            if (idx !== -1) globalReviews[idx] = { ...globalReviews[idx], name, text:message, rating:currentRating, eventType:evType };
-          }
-          cancelEdit(); loadReviews();
-        })
-        .catch(() => { alert('Network error.'); reset(); });
-
-      function reset() { submitBtn.disabled = false; submitText.innerText = action === 'create' ? 'Submit Script' : 'Update Review'; }
-    });
-  }
-
-  function toggleOtherInput(sel) {
-    const c = document.getElementById('other-event-container');
-    const i = document.getElementById('other-event-input');
-    if (sel.value === 'Other') { c.classList.remove('hidden'); i.required = true; i.focus(); }
-    else                        { c.classList.add('hidden'); i.required = false; i.value = ''; }
-  }
-
-  function editReview(id, name, text, rating, eventType) {
-    document.getElementById('form-title').innerText = 'Edit Your Review';
-    document.getElementById('form-action').value = 'update';
-    document.getElementById('edit-id').value = id;
-    document.getElementById('review-name').value = name;
-    document.getElementById('review-message').value = text;
-    document.getElementById('review-event-type').value = eventType;
-    if (eventType === 'Other') toggleOtherInput(document.getElementById('review-event-type'));
-    setRating(parseInt(rating), false);
-    document.getElementById('submit-text').innerText = 'Update Review';
-    document.getElementById('cancel-edit-btn').classList.remove('hidden');
-    document.getElementById('review-form').classList.remove('hidden');
-    document.getElementById('review-form').scrollIntoView({ behavior:'smooth' });
-  }
-
-  function cancelEdit() {
-    reviewForm.reset();
-    document.getElementById('form-title').innerText = 'Rate Our Performance';
-    document.getElementById('form-action').value = 'create';
-    document.getElementById('edit-id').value = '';
-    document.getElementById('submit-text').innerText = 'Submit Script';
-    document.getElementById('cancel-edit-btn').classList.add('hidden');
-    document.getElementById('other-event-container').classList.add('hidden');
-    document.getElementById('review-form').classList.add('hidden');
-    setRating(0, false);
-  }
-
-  function deleteReview(id) {
-    if (!confirm('Delete this review?')) return;
-    const params = new URLSearchParams(); params.append('action','delete'); params.append('id',id);
-    fetch(GOOGLE_SCRIPT_URL, { method:'POST', body:params, mode:'no-cors' }).then(() => {
-      globalReviews = globalReviews.filter(r => r.id !== id);
-      myReviews = myReviews.filter(r => r.id !== id);
-      localStorage.setItem('my_reviews', JSON.stringify(myReviews));
-      loadReviews();
-    });
-  }
-
-  // Reveal observer
-  const revealObs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); else e.target.classList.remove('active'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
-
-  fetchReviews();
-`;
-
-export default function Reviews() {
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.id = 'reviews-injected-css';
-    style.textContent = sectionCSS;
-    document.head.appendChild(style);
-
-    const script = document.createElement('script');
-    script.id = 'reviews-injected-js';
-    script.textContent = sectionJS;
-    document.body.appendChild(script);
-
-    return () => {
-      document.getElementById('reviews-injected-css')?.remove();
-      document.getElementById('reviews-injected-js')?.remove();
-    };
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
-  return <div dangerouslySetInnerHTML={{ __html: sectionHTML }} />;
+  // Window resize handler
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Close kebab menu on click outside
+  useEffect(() => {
+    const closeMenu = () => setActiveMenuId(null);
+    document.addEventListener('click', closeMenu);
+    return () => document.removeEventListener('click', closeMenu);
+  }, []);
+
+  const handleStarClick = (n) => {
+    setCurrentRating(n);
+    if (n === 5) triggerGoldShower();
+  };
+
+  const handleEditClick = useCallback((review) => {
+    setFormAction('update');
+    setEditId(review.id);
+    setName(review.name);
+    setMessage(review.text || review.message || '');
+    
+    const standardTypes = ['Wedding', 'Corporate Event', 'Birthday Party'];
+    if (standardTypes.includes(review.eventType)) {
+      setEventType(review.eventType);
+      setOtherEventType('');
+    } else {
+      setEventType('Other');
+      setOtherEventType(review.eventType || '');
+    }
+    setCurrentRating(parseInt(review.rating) || 5);
+    
+    setTimeout(() => {
+      document.getElementById('review-form')?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  }, []);
+
+  const cancelEdit = useCallback(() => {
+    setFormAction('create');
+    setEditId('');
+    setName('');
+    setMessage('');
+    setEventType('');
+    setOtherEventType('');
+    setCurrentRating(0);
+  }, []);
+
+  const handleDeleteClick = useCallback(async (id) => {
+    if (!window.confirm('Delete this review?')) return;
+    
+    const params = new URLSearchParams();
+    params.append('action', 'delete');
+    params.append('id', id);
+    
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        body: params,
+        mode: 'no-cors'
+      });
+      
+      setGlobalReviews(prev => prev.filter(r => r.id !== id));
+      const updatedMy = myReviews.filter(r => r.id !== id);
+      setMyReviews(updatedMy);
+      localStorage.setItem('my_reviews', JSON.stringify(updatedMy));
+    } catch {
+      alert('Network error.');
+    }
+  }, [myReviews]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!isValidName(name)) {
+      alert('Invalid Name (letters only, min 2 chars).');
+      return;
+    }
+    if (!isValidMessage(message)) {
+      alert('Invalid Message (min 4 chars).');
+      return;
+    }
+    
+    setSubmitting(true);
+    const finalEventType = eventType === 'Other' ? otherEventType.trim() : eventType;
+    const timeStr = new Date().toLocaleString();
+    
+    const params = new URLSearchParams();
+    params.append('action', formAction);
+    params.append('name', name.trim());
+    params.append('text', message.trim());
+    params.append('rating', currentRating.toString());
+    params.append('eventType', finalEventType);
+    params.append('time', timeStr);
+    
+    let finalId = editId;
+    if (formAction === 'create') {
+      finalId = generateUUID();
+      params.append('id', finalId);
+    } else {
+      params.append('id', editId);
+    }
+    
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        body: params,
+        mode: 'no-cors'
+      });
+      
+      alert(formAction === 'create' ? 'Review Submitted!' : 'Review Updated!');
+      
+      if (formAction === 'create') {
+        const newReviewEntry = { id: finalId, timestamp: Date.now() };
+        const updatedMy = [...myReviews, newReviewEntry];
+        setMyReviews(updatedMy);
+        localStorage.setItem('my_reviews', JSON.stringify(updatedMy));
+        
+        const newReview = {
+          id: finalId,
+          name: name.trim(),
+          text: message.trim(),
+          rating: currentRating,
+          eventType: finalEventType,
+          time: timeStr
+        };
+        setGlobalReviews(prev => [newReview, ...prev]);
+        if (currentRating >= 4) triggerGoldShower();
+      } else {
+        setGlobalReviews(prev => prev.map(r => {
+          if (r.id === finalId) {
+            return {
+              ...r,
+              name: name.trim(),
+              text: message.trim(),
+              rating: currentRating,
+              eventType: finalEventType
+            };
+          }
+          return r;
+        }));
+      }
+      cancelEdit();
+    } catch {
+      alert('Network error.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleSeeLess = () => {
+    setIsExpanded(false);
+    document.getElementById('testimonials-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const allReviews = [...globalReviews, ...hardcodedReviews];
+  const limit = windowWidth < 700 ? 3 : 6;
+  const visibleReviews = isExpanded ? allReviews : allReviews.slice(0, limit);
+  const hiddenCount = allReviews.length - visibleReviews.length;
+
+  const showForm = currentRating > 0 || formAction === 'update';
+
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: sectionCSS }} />
+      
+      <section id="reviews-section" className="rv-section">
+        <div className="rv-dot-bg"></div>
+
+        <div className="rv-container">
+          {/* Header */}
+          <motion.div
+            className="rv-header"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7 }}
+          >
+            <span className="rv-eyebrow">Review &amp; Feedback</span>
+            <h2 className="rv-title">Client Stories</h2>
+            <div className="rv-title-bar"></div>
+          </motion.div>
+
+          {/* Loader */}
+          {loading && (
+            <div id="reviews-loader" className="rv-loader-wrap">
+              <div className="rv-spinner"></div>
+              <p className="rv-loader-text">Loading Reviews…</p>
+            </div>
+          )}
+
+          {/* Cards Grid */}
+          <div id="testimonials-grid" className="rv-grid">
+            {visibleReviews.map((review, i) => {
+              const isMine = myReviews.some(m => m.id === review.id);
+              const stars = '★'.repeat(Math.min(parseInt(review.rating) || 5, 5));
+              let displayTime = review.time || review.date || '';
+              if (displayTime && displayTime.includes('T')) {
+                try { displayTime = new Date(displayTime).toLocaleString(); } catch {}
+              }
+              const entry = myReviews.find(m => m.id === review.id);
+              const canDelete = entry && (Date.now() - entry.timestamp) < 3600000;
+
+              return (
+                <motion.div
+                  key={review.id || `hc-${i}`}
+                  className="rv-card"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
+                >
+                  {isMine && (
+                    <div className="kebab-wrap">
+                      <button
+                        className="kebab-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveMenuId(activeMenuId === review.id ? null : review.id);
+                        }}
+                        title="Options"
+                      >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                          <circle cx="12" cy="12" r="2" />
+                          <circle cx="12" cy="6" r="2" />
+                          <circle cx="12" cy="18" r="2" />
+                        </svg>
+                      </button>
+                      
+                      {activeMenuId === review.id && (
+                        <div className="menu-dropdown" onClick={(e) => e.stopPropagation()}>
+                          <button onClick={() => handleEditClick(review)} className="menu-item">✏️ Edit</button>
+                          {canDelete && (
+                            <button onClick={() => handleDeleteClick(review.id)} className="menu-item" style={{ color: '#f87171' }}>🗑 Delete</button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="rv-card-stars">{stars}</div>
+                  <p className="rv-card-text">"{review.text || review.message}"</p>
+                  <div className="rv-card-divider"></div>
+                  <p className="rv-card-name">{review.name}</p>
+                  <p className="rv-card-type">{review.eventType}</p>
+                  {displayTime && <span className="rv-card-time">{displayTime}</span>}
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* See More / See Less Toggle */}
+          {hiddenCount > 0 && !isExpanded && (
+            <div id="see-more-container" className="rv-toggle-wrap">
+              <button onClick={() => setIsExpanded(true)} className="rv-toggle-btn">See More Stories</button>
+            </div>
+          )}
+          {isExpanded && (
+            <div id="see-less-container" className="rv-toggle-wrap">
+              <button onClick={handleSeeLess} className="rv-toggle-btn">See Less Stories</button>
+            </div>
+          )}
+
+          {/* Rating Form */}
+          <motion.div
+            className="rv-form-wrap"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7 }}
+          >
+            <h3 className="rv-form-title" id="form-title">
+              {formAction === 'update' ? 'Edit Your Review' : 'Rate Our Performance'}
+            </h3>
+
+            <div
+              className="rv-stars-row"
+              id="star-container"
+              onMouseLeave={() => setHoverRating(0)}
+            >
+              {[1, 2, 3, 4, 5].map((starNum) => {
+                const isLit = hoverRating > 0 ? starNum <= hoverRating : starNum <= currentRating;
+                return (
+                  <button
+                    type="button"
+                    key={starNum}
+                    onClick={() => handleStarClick(starNum)}
+                    onMouseEnter={() => setHoverRating(starNum)}
+                    className="rv-star-btn"
+                  >
+                    <svg
+                      width="40"
+                      height="40"
+                      viewBox="0 0 24 24"
+                      fill={isLit ? '#C5A059' : 'none'}
+                      stroke={isLit ? '#C5A059' : '#6B7280'}
+                      strokeWidth="2"
+                    >
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div id="rating-text" className="rv-rating-label">
+              {currentRating ? `You selected ${currentRating} star${currentRating > 1 ? 's' : ''}` : ''}
+            </div>
+
+            <form
+              id="review-form"
+              className={`rv-form ${showForm ? '' : 'hidden'}`}
+              onSubmit={handleSubmit}
+            >
+              <input
+                type="text"
+                name="name"
+                id="review-name"
+                required
+                placeholder="Your Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="rv-input"
+              />
+
+              <div className="rv-select-wrap">
+                <select
+                  name="event_type"
+                  id="review-event-type"
+                  required
+                  value={eventType}
+                  onChange={(e) => setEventType(e.target.value)}
+                  className="rv-select"
+                >
+                  <option value="" disabled>Select Event Type</option>
+                  <option value="Wedding">Wedding</option>
+                  <option value="Corporate Event">Corporate Event</option>
+                  <option value="Birthday Party">Birthday Party</option>
+                  <option value="Other">Other (Please Specify)</option>
+                </select>
+                <div className="rv-select-arrow">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+
+              <div id="other-event-container" className={eventType === 'Other' ? '' : 'hidden'}>
+                <input
+                  type="text"
+                  id="other-event-input"
+                  placeholder="Specify your event…"
+                  required={eventType === 'Other'}
+                  value={otherEventType}
+                  onChange={(e) => setOtherEventType(e.target.value)}
+                  className="rv-input rv-input-other"
+                />
+              </div>
+
+              <textarea
+                name="message"
+                id="review-message"
+                required
+                rows="3"
+                placeholder="Tell us about your experience…"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="rv-textarea"
+              ></textarea>
+
+              <button
+                type="submit"
+                id="submit-btn"
+                disabled={submitting}
+                className="rv-submit-btn"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 2L11 13" />
+                  <path d="M22 2L15 22L11 13L2 9L22 2z" />
+                </svg>
+                <span>{submitting ? 'Processing…' : formAction === 'create' ? 'Submit' : 'Update Review'}</span>
+              </button>
+              
+              {formAction === 'update' && (
+                <button
+                  type="button"
+                  id="cancel-edit-btn"
+                  onClick={cancelEdit}
+                  className="rv-cancel-btn"
+                >
+                  Cancel Edit
+                </button>
+              )}
+            </form>
+          </motion.div>
+        </div>
+      </section>
+    </>
+  );
 }

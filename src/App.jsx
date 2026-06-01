@@ -39,10 +39,10 @@ export default function App() {
 
   /* ── Fetch custom hero image from backend on mount ── */
   useEffect(() => {
-    fetch('http://localhost:3001/api/hero-image')
+    fetch('/api/hero-image')
       .then(r => r.json())
       .then(d => {
-        if (d.url) setHeroImageUrl(`http://localhost:3001${d.url}`);
+        if (d.url) setHeroImageUrl(d.url); // e.g. /uploads/hero/abc.mp4 — served via Vite proxy
       })
       .catch(() => {}); // silently fall back to default if backend is offline
   }, []);

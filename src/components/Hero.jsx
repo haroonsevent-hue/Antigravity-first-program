@@ -150,14 +150,14 @@ export default function Hero({ scrollTo, heroImageUrl }) {
       <div style={{ position: 'absolute', inset: 0, background: 'var(--hero-bg)' }} />
 
       {/* Parallax hero media */}
-      {heroImageUrl && (heroImageUrl.endsWith('.mp4') || heroImageUrl.endsWith('.webm')) ? (
+      {heroImageUrl && /\.(mp4|webm|mov|avi|mkv)$/i.test(heroImageUrl) ? (
         <motion.video
           autoPlay loop muted playsInline
           src={heroImageUrl}
           style={{
             position: 'absolute', inset: '-10%',
             width: '120%', height: '120%', objectFit: 'cover',
-            opacity: 0.15,
+            opacity: 0.35,
             y: imgY,
           }}
         />
@@ -167,7 +167,7 @@ export default function Hero({ scrollTo, heroImageUrl }) {
             position: 'absolute', inset: '-10%',
             backgroundImage: `url('${heroImageUrl || DEFAULT_HERO}')`,
             backgroundSize: 'cover', backgroundPosition: 'center',
-            opacity: 0.15,
+            opacity: 0.35,
             y: imgY,
           }}
         />

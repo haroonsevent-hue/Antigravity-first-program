@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Haroon's Weddings & Events</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap"
+        rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -34,17 +37,20 @@
             background-repeat: no-repeat;
             background-size: cover;
         }
+
         .reveal {
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.8s ease-out;
         }
+
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
     </style>
 </head>
+
 <body class="bg-white text-gray-800 font-sans">
 
     <!-- Header/Nav -->
@@ -59,7 +65,8 @@
                 <a href="#contact" class="hover:text-gold transition">Contact</a>
             </div>
             <button class="md:hidden text-dark">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
             </button>
@@ -69,13 +76,18 @@
     <!-- Hero Section -->
     <section id="home" class="h-screen flex items-center justify-center relative overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1920&q=80" alt="Wedding" class="w-full h-full object-cover">
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1920&q=80"
+                alt="Wedding" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-black/40"></div>
         </div>
         <div class="relative z-10 text-center text-white px-4">
-            <h1 class="text-5xl md:text-7xl font-serif mb-6 reveal">Capturing Your <br> <span class="italic text-gold">Most Precious</span> Moments</h1>
-            <p class="text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light reveal">Kerala's Premier Wedding and Event Management Studio Since 1989.</p>
-            <a href="#contact" class="inline-block bg-gold text-white px-10 py-4 uppercase tracking-widest text-sm font-bold hover:bg-dark transition reveal">Book a Consultation</a>
+            <h1 class="text-5xl md:text-7xl font-serif mb-6 reveal">Capturing Your <br> <span
+                    class="italic text-gold">Most Precious</span> Moments</h1>
+            <p class="text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light reveal">Kerala's Premier Wedding and Event
+                Management Studio Since 1990.</p>
+            <a href="#contact"
+                class="inline-block bg-gold text-white px-10 py-4 uppercase tracking-widest text-sm font-bold hover:bg-dark transition reveal">Book
+                a Consultation</a>
         </div>
     </section>
 
@@ -91,19 +103,22 @@
                 <div class="bg-white p-8 shadow-xl hover:-translate-y-2 transition duration-300 reveal">
                     <div class="text-gold mb-6 text-4xl">💍</div>
                     <h3 class="text-xl font-serif font-bold mb-4">Wedding Planning</h3>
-                    <p class="text-gray-600 leading-relaxed">Complete wedding management from concept to execution. We handle every detail so you can enjoy your big day.</p>
+                    <p class="text-gray-600 leading-relaxed">Complete wedding management from concept to execution. We
+                        handle every detail so you can enjoy your big day.</p>
                 </div>
                 <!-- Service 2 -->
                 <div class="bg-white p-8 shadow-xl hover:-translate-y-2 transition duration-300 reveal">
                     <div class="text-gold mb-6 text-4xl">🏛️</div>
                     <h3 class="text-xl font-serif font-bold mb-4">Stage Decoration</h3>
-                    <p class="text-gray-600 leading-relaxed">Breathtaking stage setups and floral arrangements that reflect your unique style and personality.</p>
+                    <p class="text-gray-600 leading-relaxed">Breathtaking stage setups and floral arrangements that
+                        reflect your unique style and personality.</p>
                 </div>
                 <!-- Service 3 -->
                 <div class="bg-white p-8 shadow-xl hover:-translate-y-2 transition duration-300 reveal">
                     <div class="text-gold mb-6 text-4xl">🎬</div>
                     <h3 class="text-xl font-serif font-bold mb-4">Event Management</h3>
-                    <p class="text-gray-600 leading-relaxed">Corporate events, birthday parties, and cultural celebrations handled with professional precision.</p>
+                    <p class="text-gray-600 leading-relaxed">Corporate events, birthday parties, and cultural
+                        celebrations handled with professional precision.</p>
                 </div>
             </div>
         </div>
@@ -117,10 +132,14 @@
                 <div class="w-20 h-1 bg-gold mx-auto"></div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&q=80" alt="Gallery" class="w-full h-64 object-cover hover:opacity-80 transition cursor-pointer reveal">
-                <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=600&q=80" alt="Gallery" class="w-full h-64 object-cover hover:opacity-80 transition cursor-pointer reveal">
-                <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=600&q=80" alt="Gallery" class="w-full h-64 object-cover hover:opacity-80 transition cursor-pointer reveal">
-                <img src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=600&q=80" alt="Gallery" class="w-full h-64 object-cover hover:opacity-80 transition cursor-pointer reveal">
+                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=600&q=80"
+                    alt="Gallery" class="w-full h-64 object-cover hover:opacity-80 transition cursor-pointer reveal">
+                <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=600&q=80"
+                    alt="Gallery" class="w-full h-64 object-cover hover:opacity-80 transition cursor-pointer reveal">
+                <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=600&q=80"
+                    alt="Gallery" class="w-full h-64 object-cover hover:opacity-80 transition cursor-pointer reveal">
+                <img src="https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=600&q=80"
+                    alt="Gallery" class="w-full h-64 object-cover hover:opacity-80 transition cursor-pointer reveal">
             </div>
         </div>
     </section>
@@ -165,9 +184,10 @@
                 }
             });
         });
-        
+
         // Initial check
         window.dispatchEvent(new Event('scroll'));
     </script>
 </body>
+
 </html>

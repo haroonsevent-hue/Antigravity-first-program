@@ -1,21 +1,21 @@
 import { motion } from 'framer-motion';
 import logoImage from '../assets/logo.png';
 
-const links   = ['Home','Services','Gallery','Reviews','Contact'];
-const secMap  = { Home:'home', Services:'services', Gallery:'gallery', Reviews:'reviews-section', Contact:'contact' };
+const links = ['Home', 'Services', 'Gallery', 'Reviews', 'Contact'];
+const secMap = { Home: 'home', Services: 'services', Gallery: 'gallery', Reviews: 'reviews-section', Contact: 'contact' };
 
 const socials = [
   {
     label: 'Instagram', href: 'https://www.instagram.com/haroons_weddings/?hl=en',
-    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>,
+    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect width="20" height="20" x="2" y="2" rx="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>,
   },
   {
     label: 'Facebook', href: 'https://www.facebook.com/p/Haroons-weddings-events-100063703044091/',
-    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
+    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>,
   },
   {
     label: 'YouTube', href: 'https://www.youtube.com/channel/UC5XX2UPV5JB6wIaPxrPlMbg',
-    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>,
+    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" /><path d="m10 15 5-3-5-3z" /></svg>,
   },
 ];
 
@@ -52,7 +52,7 @@ export default function Footer({ scrollTo }) {
           </button>
 
           <p style={{ fontSize: 14, lineHeight: 1.9, color: 'var(--text-dim)', maxWidth: 360, marginBottom: 36 }}>
-            Turning your special moments into lifelong memories. Full-service planning for weddings, corporate galas, and private celebrations since 1989.
+            Turning your special moments into lifelong memories. Full-service planning for weddings, corporate galas, and private celebrations since 1990.
           </p>
 
           <div style={{ display: 'flex', gap: 10 }}>
@@ -91,9 +91,9 @@ export default function Footer({ scrollTo }) {
         <div>
           <h4 style={{ fontFamily: 'Cinzel, serif', fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 28 }}>Contact Us</h4>
           {[
-            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>, text: 'Near Jamia College, Chembakuth, Edavanna, Kerala 676541' },
-            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>, text: '+91 9037874001\n+91 9567525723\n+91 9633772525' },
-            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>, text: 'haroonsevent@gmail.com' },
+            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>, text: 'Near Jamia College, Chembakuth, Edavanna, Kerala 676541' },
+            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>, text: '+91 9037874001\n+91 9567525723\n+91 9633772525' },
+            { icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>, text: 'haroonsevent@gmail.com' },
           ].map((item, i) => (
             <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 18, fontSize: 13, color: 'var(--text-dim)' }}>
               <span style={{ color: 'var(--gold)', flexShrink: 0, marginTop: 2 }}>{item.icon}</span>

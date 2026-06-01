@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = ''; // Uses Vite proxy → http://localhost:3001
 
 /* ── Static fallback: 3 couple / wedding photos ── */
 const FALLBACK_IMAGES = [
@@ -15,14 +15,14 @@ const SLIDE_INTERVAL = 3500;
 
 /* 3D card slot config: translateX, translateZ, rotateY, scale, brightness for each position */
 const CARD_SLOTS = [
-  /* Front  */ { x:   0, z:   0, ry:   0, scale: 1,    bright: 1    },
-  /* Right  */ { x:  90, z: -80, ry: -28, scale: 0.88, bright: 0.72 },
-  /* Left   */ { x: -80, z:-120, ry:  22, scale: 0.82, bright: 0.55 },
+  /* Front  */ { x: 0, z: 0, ry: 0, scale: 1, bright: 1 },
+  /* Right  */ { x: 90, z: -80, ry: -28, scale: 0.88, bright: 0.72 },
+  /* Left   */ { x: -80, z: -120, ry: 22, scale: 0.82, bright: 0.55 },
 ];
 
 function StorySlideshow() {
-  const [active, setActive]           = useState(0);
-  const [tilt, setTilt]               = useState({ rx: 0, ry: 0 });
+  const [active, setActive] = useState(0);
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
   const [uploadedImages, setUploadedImages] = useState([]);
   const frontRef = useRef(null);
 
@@ -38,7 +38,7 @@ function StorySlideshow() {
         .then(data => {
           if (Array.isArray(data) && data.length > 0) {
             setUploadedImages(data.map(img => ({
-              src: `${API_BASE}${img.src}`,
+              src: img.src, // /uploads/about/... served via Vite proxy
               alt: img.title || img.tag || 'Event Photo',
             })));
           } else {
@@ -65,9 +65,9 @@ function StorySlideshow() {
     const el = frontRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const cx = rect.left + rect.width  / 2;
-    const cy = rect.top  + rect.height / 2;
-    const dx = (e.clientX - cx) / (rect.width  / 2);   /* -1 → 1 */
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);   /* -1 → 1 */
     const dy = (e.clientY - cy) / (rect.height / 2);
     setTilt({ rx: dy * -9, ry: dx * 12 });
   }
@@ -158,18 +158,20 @@ function StorySlideshow() {
                   : false
                 }
                 animate={{
-                  rotateY: isFront ? tilt.ry       : cfg.ry,
-                  rotateX: isFront ? tilt.rx       : 0,
-                  x:       isFront ? 0             : cfg.x,
-                  z:       isFront ? 0             : cfg.z,
-                  scale:   isFront ? 1             : cfg.scale,
+                  rotateY: isFront ? tilt.ry : cfg.ry,
+                  rotateX: isFront ? tilt.rx : 0,
+                  x: isFront ? 0 : cfg.x,
+                  z: isFront ? 0 : cfg.z,
+                  scale: isFront ? 1 : cfg.scale,
                   opacity: 1,
-                  filter:  `brightness(${cfg.bright})`,
-                  zIndex:  isFront ? 10 : (slot === 1 ? 5 : 2),
+                  filter: `brightness(${cfg.bright})`,
+                  zIndex: isFront ? 10 : (slot === 1 ? 5 : 2),
                 }}
                 exit={isFront
-                  ? { rotateY: 65, x: 60, z: -100, scale: 0.82, opacity: 0,
-                      transition: { duration: 0.5, ease: [0.4,0,0.6,1] } }
+                  ? {
+                    rotateY: 65, x: 60, z: -100, scale: 0.82, opacity: 0,
+                    transition: { duration: 0.5, ease: [0.4, 0, 0.6, 1] }
+                  }
                   : false
                 }
                 transition={
@@ -288,21 +290,21 @@ function StorySlideshow() {
 const FADE_UP = {
   initial: { opacity: 0, y: 50 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-80px' },
+  viewport: { once: false, margin: '-80px' },
   transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
 };
 
 const FADE_LEFT = {
   initial: { opacity: 0, x: -60 },
   whileInView: { opacity: 1, x: 0 },
-  viewport: { once: true, margin: '-80px' },
+  viewport: { once: false, margin: '-80px' },
   transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
 };
 
 const FADE_RIGHT = {
   initial: { opacity: 0, x: 60 },
   whileInView: { opacity: 1, x: 0 },
-  viewport: { once: true, margin: '-80px' },
+  viewport: { once: false, margin: '-80px' },
   transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
 };
 
@@ -414,11 +416,11 @@ export default function About() {
 
           {/* ── Content column ── */}
           <motion.div {...FADE_RIGHT}>
-            {/* "Since 1989" eyebrow */}
+            {/* "Since 1990" eyebrow */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ delay: 0.1, duration: 0.9 }}
               style={{
                 fontFamily: 'Cinzel, serif',
@@ -430,13 +432,13 @@ export default function About() {
                 opacity: 0.8,
               }}
             >
-              Since 1989
+              Since 1990
             </motion.p>
 
             <motion.h3
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ delay: 0.18, duration: 0.9 }}
               style={{
                 fontFamily: 'Cormorant Garamond, serif',
@@ -464,7 +466,7 @@ export default function About() {
                 key={i}
                 initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 transition={{ delay: 0.25 + i * 0.12, duration: 1 }}
                 style={{
                   fontSize: 15,
@@ -481,7 +483,7 @@ export default function About() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ delay: 0.6, duration: 1 }}
               style={{
                 display: 'flex',

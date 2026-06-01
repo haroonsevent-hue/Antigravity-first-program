@@ -72,7 +72,7 @@ export default function Contact() {
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="section-label">Get in Touch</span>
@@ -88,7 +88,7 @@ export default function Contact() {
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           style={{
             background: 'var(--card-bg)',

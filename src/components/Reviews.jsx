@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhtBle7BrR2Ip8Q_-rQI1Y3tTQ37PDxGdDyBXRnQimAOVFUANHwG7RStXeHJFvY5bHSQ/exec";
@@ -119,34 +119,97 @@ const sectionCSS = `
   @keyframes rv-spin { to { transform: rotate(360deg); } }
   .rv-loader-text { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 300; color: #C5A059; letter-spacing: .05em; }
 
-  /* ── Grid ────────────────────────────────────────────────────── */
-  .rv-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    margin-bottom: 32px;
+  /* ── Marquee & Arrows ────────────────────────────────────────────────────── */
+  .rv-marquee-wrapper {
+    position: relative;
+    width: 100%;
   }
-  @media (max-width: 700px) { .rv-grid { grid-template-columns: 1fr; } }
-  @media (min-width: 701px) and (max-width: 900px) { .rv-grid { grid-template-columns: repeat(2, 1fr); } }
+  .rv-marquee-container {
+    width: 100%;
+    overflow-x: auto;
+    position: relative;
+    padding: 40px 0 80px;
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .rv-marquee-container::-webkit-scrollbar { display: none; }
+  .rv-marquee-track {
+    display: flex;
+    gap: 40px;
+    width: max-content;
+    padding: 0 20px;
+  }
+  .rv-nav-arrows {
+    position: absolute;
+    top: calc(50% - 20px);
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 10;
+    padding: 0 40px;
+    box-sizing: border-box;
+  }
+  .rv-arrow {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(197, 160, 89, 0.3);
+    color: #C5A059;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: auto;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+  }
+  .rv-arrow:hover {
+    background: rgba(197, 160, 89, 0.15);
+    border-color: rgba(197, 160, 89, 0.8);
+    transform: scale(1.1);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(197, 160, 89, 0.2);
+    color: #fff;
+  }
+  .rv-marquee-wrapper:hover .rv-arrow {
+    opacity: 1;
+  }
+  @media (max-width: 768px) {
+    .rv-arrow { opacity: 1; width: 44px; height: 44px; }
+    .rv-nav-arrows { padding: 0 16px; }
+  }
 
   /* ── Card ────────────────────────────────────────────────── */
   .rv-card {
-    background: var(--card-bg);
-    border: 1px solid var(--input-border);
-    border-radius: 14px;
-    padding: 24px 22px 22px;
+    width: 380px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+    border: 1px solid rgba(197, 160, 89, 0.15);
+    border-radius: 20px;
+    padding: 36px 32px 30px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     position: relative;
-    transition: border-color .25s, transform .25s, box-shadow .25s;
-    backdrop-filter: blur(8px);
+    transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
   .rv-card:hover {
-    border-color: rgba(197,160,89,.45);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 36px rgba(0,0,0,.35);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border-color: rgba(197, 160, 89, 0.4);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35), 0 0 20px rgba(197, 160, 89, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
+  @media (max-width: 700px) { .rv-card { width: 320px; padding: 28px 24px 26px; } }
   .rv-card-stars { color: #C5A059; font-size: 14px; letter-spacing: 2px; }
   .rv-card-text {
     font-family: 'Cormorant Garamond', serif;
@@ -351,8 +414,69 @@ export default function Reviews() {
   const [loading, setLoading] = useState(false);
   const [currentRating, setCurrentRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+
+  // Auto-scroll states
+  const scrollRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const pauseTimeout = useRef(null);
+
+  useEffect(() => {
+    let animationId;
+    const container = scrollRef.current;
+    
+    const scrollLoop = () => {
+      if (container && !isPaused) {
+        container.scrollLeft += 0.5; // Auto-scroll speed
+        // Reset when halfway (since we duplicated items an even number of times)
+        if (container.scrollLeft >= container.scrollWidth / 2) {
+          container.scrollLeft -= container.scrollWidth / 2;
+        }
+      }
+      animationId = requestAnimationFrame(scrollLoop);
+    };
+    
+    animationId = requestAnimationFrame(scrollLoop);
+    return () => cancelAnimationFrame(animationId);
+  }, [isPaused]);
+
+  const handleManualScroll = useCallback((direction) => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    // Pause scroll
+    setIsPaused(true);
+    if (pauseTimeout.current) clearTimeout(pauseTimeout.current);
+
+    const scrollAmount = windowWidth < 700 ? 360 : 420; // Card width + gap
+
+    // Infinite loop jump
+    if (direction === 'left' && container.scrollLeft < scrollAmount) {
+      container.style.scrollBehavior = 'auto';
+      container.scrollLeft += container.scrollWidth / 2;
+    } else if (direction === 'right' && container.scrollLeft >= container.scrollWidth / 2) {
+      container.style.scrollBehavior = 'auto';
+      container.scrollLeft -= container.scrollWidth / 2;
+    }
+    
+    // Force layout reflow
+    void container.offsetWidth;
+
+    // Smooth animate
+    container.style.scrollBehavior = 'smooth';
+    container.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount });
+
+    // Remove smooth scroll after animation
+    setTimeout(() => {
+      if (container) container.style.scrollBehavior = 'auto';
+    }, 500);
+
+    // Resume after 4 seconds
+    pauseTimeout.current = setTimeout(() => {
+      setIsPaused(false);
+      pauseTimeout.current = null;
+    }, 4000);
+  }, [windowWidth]);
 
   // Form states
   const [formAction, setFormAction] = useState('create');
@@ -532,15 +656,9 @@ export default function Reviews() {
     }
   };
 
-  const handleSeeLess = () => {
-    setIsExpanded(false);
-    document.getElementById('testimonials-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
   const allReviews = [...globalReviews, ...hardcodedReviews];
-  const limit = windowWidth < 700 ? 3 : 6;
-  const visibleReviews = isExpanded ? allReviews : allReviews.slice(0, limit);
-  const hiddenCount = allReviews.length - visibleReviews.length;
+  // Duplicate 4x to ensure there's enough content to fill any ultra-wide screen and scroll infinitely
+  const marqueeReviews = [...allReviews, ...allReviews, ...allReviews, ...allReviews];
 
   const showForm = currentRating > 0 || formAction === 'update';
 
@@ -557,7 +675,7 @@ export default function Reviews() {
             className="rv-header"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: false, margin: "-100px" }}
             transition={{ duration: 0.7 }}
           >
             <span className="rv-eyebrow">Review &amp; Feedback</span>
@@ -572,85 +690,103 @@ export default function Reviews() {
               <p className="rv-loader-text">Loading Reviews…</p>
             </div>
           )}
+        </div>
 
-          {/* Cards Grid */}
-          <div id="testimonials-grid" className="rv-grid">
-            {visibleReviews.map((review, i) => {
-              const isMine = myReviews.some(m => m.id === review.id);
-              const stars = '★'.repeat(Math.min(parseInt(review.rating) || 5, 5));
-              let displayTime = review.time || review.date || '';
-              if (displayTime && displayTime.includes('T')) {
-                try { displayTime = new Date(displayTime).toLocaleString(); } catch {}
-              }
-              const entry = myReviews.find(m => m.id === review.id);
-              const canDelete = entry && (Date.now() - entry.timestamp) < 3600000;
+        {/* Infinite Marquee - Full Width */}
+        <div className="rv-marquee-wrapper">
+            <div className="rv-nav-arrows">
+              <button 
+                className="rv-arrow" 
+                onClick={() => handleManualScroll('left')}
+                aria-label="Previous Reviews"
+              >
+                <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button 
+                className="rv-arrow" 
+                onClick={() => handleManualScroll('right')}
+                aria-label="Next Reviews"
+              >
+                <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
 
-              return (
-                <motion.div
-                  key={review.id || `hc-${i}`}
-                  className="rv-card"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
-                >
-                  {isMine && (
-                    <div className="kebab-wrap">
-                      <button
-                        className="kebab-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setActiveMenuId(activeMenuId === review.id ? null : review.id);
-                        }}
-                        title="Options"
-                      >
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                          <circle cx="12" cy="12" r="2" />
-                          <circle cx="12" cy="6" r="2" />
-                          <circle cx="12" cy="18" r="2" />
-                        </svg>
-                      </button>
-                      
-                      {activeMenuId === review.id && (
-                        <div className="menu-dropdown" onClick={(e) => e.stopPropagation()}>
-                          <button onClick={() => handleEditClick(review)} className="menu-item">✏️ Edit</button>
-                          {canDelete && (
-                            <button onClick={() => handleDeleteClick(review.id)} className="menu-item" style={{ color: '#f87171' }}>🗑 Delete</button>
+            <div 
+              className="rv-marquee-container" 
+              ref={scrollRef}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => {
+                if (!pauseTimeout.current) setIsPaused(false);
+              }}
+            >
+              <div className="rv-marquee-track">
+                {marqueeReviews.map((review, i) => {
+                  const isMine = myReviews.some(m => m.id === review.id);
+                  const stars = '★'.repeat(Math.min(parseInt(review.rating) || 5, 5));
+                  let displayTime = review.time || review.date || '';
+                  if (displayTime && displayTime.includes('T')) {
+                    try { displayTime = new Date(displayTime).toLocaleString(); } catch {}
+                  }
+                  const entry = myReviews.find(m => m.id === review.id);
+                  const canDelete = entry && (Date.now() - entry.timestamp) < 3600000;
+                  
+                  // Using a unique key combination for duplicated elements
+                  const uniqueKey = `${review.id || 'rev'}-${i}`;
+
+                  return (
+                    <div key={uniqueKey} className="rv-card">
+                      {isMine && (
+                        <div className="kebab-wrap">
+                          <button
+                            className="kebab-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveMenuId(activeMenuId === review.id ? null : review.id);
+                            }}
+                            title="Options"
+                          >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                              <circle cx="12" cy="12" r="2" />
+                              <circle cx="12" cy="6" r="2" />
+                              <circle cx="12" cy="18" r="2" />
+                            </svg>
+                          </button>
+                          
+                          {activeMenuId === review.id && (
+                            <div className="menu-dropdown" onClick={(e) => e.stopPropagation()}>
+                              <button onClick={() => handleEditClick(review)} className="menu-item">✏️ Edit</button>
+                              {canDelete && (
+                                <button onClick={() => handleDeleteClick(review.id)} className="menu-item" style={{ color: '#f87171' }}>🗑 Delete</button>
+                              )}
+                            </div>
                           )}
                         </div>
                       )}
-                    </div>
-                  )}
 
-                  <div className="rv-card-stars">{stars}</div>
-                  <p className="rv-card-text">"{review.text || review.message}"</p>
-                  <div className="rv-card-divider"></div>
-                  <p className="rv-card-name">{review.name}</p>
-                  <p className="rv-card-type">{review.eventType}</p>
-                  {displayTime && <span className="rv-card-time">{displayTime}</span>}
-                </motion.div>
-              );
-            })}
+                      <div className="rv-card-stars">{stars}</div>
+                      <p className="rv-card-text">"{review.text || review.message}"</p>
+                      <div className="rv-card-divider"></div>
+                      <p className="rv-card-name">{review.name}</p>
+                      <p className="rv-card-type">{review.eventType}</p>
+                      {displayTime && <span className="rv-card-time">{displayTime}</span>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
-          {/* See More / See Less Toggle */}
-          {hiddenCount > 0 && !isExpanded && (
-            <div id="see-more-container" className="rv-toggle-wrap">
-              <button onClick={() => setIsExpanded(true)} className="rv-toggle-btn">See More Stories</button>
-            </div>
-          )}
-          {isExpanded && (
-            <div id="see-less-container" className="rv-toggle-wrap">
-              <button onClick={handleSeeLess} className="rv-toggle-btn">See Less Stories</button>
-            </div>
-          )}
-
+        <div className="rv-container">
           {/* Rating Form */}
           <motion.div
             className="rv-form-wrap"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: false, margin: "-100px" }}
             transition={{ duration: 0.7 }}
           >
             <h3 className="rv-form-title" id="form-title">

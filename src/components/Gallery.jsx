@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = ''; // Uses Vite proxy → http://localhost:3001
 
 const hardcodedItems = [
   { src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80', tag: 'Wedding',    title: 'Royal Celebration',   cat: 'wedding' },
@@ -124,7 +124,7 @@ export default function Gallery() {
       .then(data => {
         setUploadedItems(data.map(img => ({
           ...img,
-          src: `${API_BASE}${img.src}`,
+          src: img.src, // /uploads/gallery/... served via Vite proxy
           isUploaded: true,
         })));
       })
@@ -146,7 +146,7 @@ export default function Gallery() {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           style={{ textAlign: 'center', marginBottom: 60 }}
         >
@@ -179,7 +179,7 @@ export default function Gallery() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 0.8, delay: 0.2 }}
           style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 60, flexWrap: 'wrap' }}
         >

@@ -109,7 +109,7 @@ function ServiceCard({ s, i, scrollTo }) {
       onMouseEnter={() => setHovered(true)}
       initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
+      viewport={{ once: false, margin: '-80px' }}
       transition={{ delay: i * 0.1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
       style={{
         perspective: 1000,
@@ -229,7 +229,7 @@ export default function Services({ scrollTo }) {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           style={{ marginBottom: 90, maxWidth: 600 }}
         >

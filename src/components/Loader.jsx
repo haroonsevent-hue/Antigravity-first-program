@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import logoImage from '../assets/logo.png';
 
 export default function Loader({ onDone }) {
-  const [pct, setPct]       = useState(0);
-  const [phase, setPhase]   = useState('loading'); // loading | reveal | done
+  const [pct, setPct] = useState(0);
+  const [phase, setPhase] = useState('loading'); // loading | reveal | done
 
   useEffect(() => {
     let v = 0;
@@ -146,7 +146,7 @@ export default function Loader({ onDone }) {
                 <span className="loader-percent" style={{ fontSize: 11 }}>
                   {String(pct).padStart(3, '0')}
                 </span>
-                <span className="loader-tagline">Est. 1989 · Kerala</span>
+                <span className="loader-tagline">Est. 1990 · Kerala</span>
               </div>
             </motion.div>
 

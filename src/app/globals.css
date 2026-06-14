@@ -1,5 +1,5 @@
 /* ─── FONTS ──────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:opsz,wght@9..40,200;9..40,300;9..40,400;9..40,500&family=Cinzel:wght@400;600;700&display=swap');
+/* Google Fonts loaded via <link> in layout.jsx for optimal Next.js performance */
 
 /* ─── TOKENS ─────────────────────────────────────── */
 :root {
@@ -69,6 +69,10 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
 a, button, [data-cursor] { cursor: none; }
 

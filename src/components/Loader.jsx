@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logoImage from '../assets/logo.png';
@@ -94,7 +95,7 @@ export default function Loader({ onDone }) {
               />
               <div className="loader-logo-ring">
                 <motion.img
-                  src={logoImage}
+                  src={logoImage.src}
                   alt="Haroon's Logo"
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}

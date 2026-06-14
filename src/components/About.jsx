@@ -1,7 +1,8 @@
+'use client';
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 
-const API_BASE = ''; // Uses Vite proxy → http://localhost:3001
+const API_BASE = ''; // Uses Next.js rewrites → http://localhost:3001
 
 /* ── Static fallback: 3 couple / wedding photos ── */
 const FALLBACK_IMAGES = [
@@ -38,7 +39,7 @@ function StorySlideshow() {
         .then(data => {
           if (Array.isArray(data) && data.length > 0) {
             setUploadedImages(data.map(img => ({
-              src: img.src, // /uploads/about/... served via Vite proxy
+              src: img.src, // /uploads/about/... served via Next.js rewrites
               alt: img.title || img.tag || 'Event Photo',
             })));
           } else {

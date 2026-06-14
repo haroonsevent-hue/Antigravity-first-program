@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
@@ -220,14 +221,14 @@ export default function Hero({ scrollTo, heroImageUrl }) {
 
       {/* Main content */}
       <motion.div
-        style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: '0 24px', maxWidth: 1000, y: contentY, opacity }}
+        style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: '0 24px', maxWidth: 1000, y: contentY, opacity, paddingTop: 'clamp(80px, 10vh, 110px)' }}
       >
         {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 40 }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginBottom: 24 }}
         >
           <div style={{ width: 40, height: 1, background: 'linear-gradient(to right, transparent, rgba(197,160,89,0.5))' }} />
           <span style={{ fontFamily: 'Cinzel, serif', fontSize: 10, letterSpacing: '0.45em', color: 'var(--gold)', textTransform: 'uppercase' }}>

@@ -1,7 +1,8 @@
+'use client';
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_BASE = ''; // Uses Vite proxy → http://localhost:3001
+const API_BASE = ''; // Uses Next.js rewrites → http://localhost:3001
 
 const hardcodedItems = [
   { src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80', tag: 'Wedding',    title: 'Royal Celebration',   cat: 'wedding' },
@@ -124,7 +125,7 @@ export default function Gallery() {
       .then(data => {
         setUploadedItems(data.map(img => ({
           ...img,
-          src: img.src, // /uploads/gallery/... served via Vite proxy
+          src: img.src, // /uploads/gallery/... served via Next.js rewrites
           isUploaded: true,
         })));
       })

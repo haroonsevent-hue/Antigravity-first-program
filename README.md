@@ -1,16 +1,76 @@
-# React + Vite
+# Haroon's Weddings & Events — Kerala's Premier Event Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Premium wedding and event management website built with **Next.js**, **React 19**, **Framer Motion**, and **Tailwind CSS**.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **UI**: React 19, Framer Motion
+- **Styling**: Tailwind CSS 4 + PostCSS
+- **Smooth Scroll**: Lenis
+- **Icons**: Lucide React
+- **Backend**: Express.js API (separate `backend/` directory)
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js 20+
+- npm
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start the Next.js dev server
+npm run dev
+```
+
+The app runs at [http://localhost:3000](http://localhost:3000).
+
+### Backend (optional)
+
+The Express backend serves uploaded images and admin APIs:
+
+```bash
+cd backend
+npm install
+node index.js
+```
+
+The backend runs at `http://localhost:3001`. Next.js rewrites in `next.config.mjs` proxy `/api/*` and `/uploads/*` requests to the backend during development.
+
+### Production Build
+
+```bash
+npm run build
+npm start
+```
+
+## Project Structure
+
+```
+├── src/
+│   ├── app/              # Next.js App Router
+│   │   ├── layout.jsx    # Root layout (fonts, metadata)
+│   │   ├── page.jsx      # Home page entry
+│   │   └── globals.css   # Global styles & design tokens
+│   ├── components/       # React components
+│   │   ├── ClientApp.jsx # Main app shell (client-side)
+│   │   ├── Hero.jsx      # Hero section
+│   │   ├── Navbar.jsx    # Navigation
+│   │   └── ...           # Other sections
+│   └── assets/           # Static assets (logo)
+├── public/               # Public static files
+├── backend/              # Express.js API server
+├── next.config.mjs       # Next.js configuration
+├── tailwind.config.js    # Tailwind CSS configuration
+├── postcss.config.mjs    # PostCSS configuration
+└── eslint.config.js      # ESLint configuration
+```
+
+## License
+
+All rights reserved © Haroon's Weddings & Events.

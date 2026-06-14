@@ -1,3 +1,4 @@
+'use client';
 /**
  * SectionDivider – smooth SVG-carved edge between sections.
  *

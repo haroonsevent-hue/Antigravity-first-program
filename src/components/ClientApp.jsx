@@ -1,28 +1,35 @@
-import './App.css';
+'use client';
+
 import { useState, useCallback, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Lenis from 'lenis';
 
-import Cursor   from './components/Cursor';
-import Loader   from './components/Loader';
-import Navbar   from './components/Navbar';
-import Hero     from './components/Hero';
-import About    from './components/About';
-import Marquee  from './components/Marquee';
-import Services from './components/Services';
-import Gallery  from './components/Gallery';
-import Stats    from './components/Stats';
-import Process  from './components/Process';
-import Reviews  from './components/Reviews';
-import Contact  from './components/Contact';
-import Footer          from './components/Footer';
-import SectionDivider  from './components/SectionDivider';
-import AdminPanel      from './components/AdminPanel';
+import Cursor         from './Cursor';
+import Loader         from './Loader';
+import Navbar         from './Navbar';
+import Hero           from './Hero';
+import About          from './About';
+import Marquee        from './Marquee';
+import Services       from './Services';
+import Gallery        from './Gallery';
+import Stats          from './Stats';
+import Process        from './Process';
+import Reviews        from './Reviews';
+import Contact        from './Contact';
+import Footer         from './Footer';
+import SectionDivider from './SectionDivider';
+import AdminPanel     from './AdminPanel';
+import BackToTop      from './BackToTop';
 
-export default function App() {
+export default function ClientApp() {
   const [loaded, setLoaded] = useState(false);
   const [heroImageUrl, setHeroImageUrl] = useState(null);
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') || 'dark';
+    }
+    return 'dark';
+  });
 
   /* ── Theme management ── */
   const toggleTheme = useCallback(() => {
@@ -42,7 +49,7 @@ export default function App() {
     fetch('/api/hero-image')
       .then(r => r.json())
       .then(d => {
-        if (d.url) setHeroImageUrl(d.url); // e.g. /uploads/hero/abc.mp4 — served via Vite proxy
+        if (d.url) setHeroImageUrl(d.url);
       })
       .catch(() => {}); // silently fall back to default if backend is offline
   }, []);
@@ -83,8 +90,11 @@ export default function App() {
         {!loaded && <Loader key="loader" onDone={() => setLoaded(true)} />}
       </AnimatePresence>
 
-      {/* Admin panel — always mounted, triggered by Shift+Ctrl+A */}
+      {/* Admin panel — always mounted, triggered by Ctrl+Shift+H */}
       <AdminPanel onHeroImageChange={setHeroImageUrl} />
+
+      {/* Back to top button — always mounted */}
+      <BackToTop scrollTo={scrollTo} />
 
       {/* Main site — fades in after loader */}
       <AnimatePresence>

@@ -210,7 +210,22 @@ const sectionCSS = `
     transform: translateY(-8px) scale(1.02);
     box-shadow: 0 24px 60px rgba(0,0,0,0.35), 0 0 20px rgba(197, 160, 89, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
-  @media (max-width: 700px) { .rv-card { width: 320px; padding: 28px 24px 26px; } }
+  @media (max-width: 700px) {
+    .rv-section { padding: 60px 0 !important; }
+    .rv-card { width: calc(100vw - 80px); min-width: 260px; max-width: 340px; padding: 28px 22px 26px; }
+    .rv-card-text { font-size: 17px; line-height: 1.65; }
+    .rv-marquee-container { padding: 28px 0 60px !important; }
+    .rv-marquee-track { gap: 20px !important; padding: 0 12px !important; }
+    .rv-header { margin-bottom: 32px !important; }
+    .rv-title { font-size: clamp(1.6rem, 6vw, 2.4rem) !important; }
+    .rv-form-wrap { padding: 28px 20px 24px !important; }
+    .rv-form-title { font-size: 1rem !important; letter-spacing: 0.15em !important; }
+    .rv-input, .rv-textarea, .rv-select { font-size: 16px !important; }
+    .rv-star-btn { padding: 8px !important; }
+    .rv-submit-btn { min-height: 48px !important; }
+    .rv-toggle-btn { padding: 14px 32px !important; }
+  }
+
   .rv-card-stars { color: #C5A059; font-size: 14px; letter-spacing: 2px; }
   .rv-card-text {
     font-family: 'Cormorant Garamond', serif;

@@ -548,8 +548,26 @@ export default function About() {
           }
         }
         @media (max-width: 700px) {
-          #about { padding: 100px 0 !important; }
-          #about > div { padding: 0 24px !important; }
+          #about { padding: 80px 0 !important; }
+          #about > div { padding: 0 20px !important; }
+          #about > div > div:first-child { margin-bottom: 40px !important; }
+          /* Constrain the 3D card scene on mobile */
+          #about .card3d-scene {
+            max-height: 280px !important;
+          }
+          /* Image column — fixed height for mobile */
+          #about > div > div:last-child > div:first-child {
+            aspect-ratio: 16/10 !important;
+            max-height: 300px;
+          }
+          /* Milestone pills — full width on tiny screens */
+          #about > div > div:last-child > div:last-child > div:last-child {
+            gap: 10px !important;
+          }
+          #about > div > div:last-child > div:last-child > div:last-child > div {
+            padding: 14px 16px !important;
+            min-width: 80px !important;
+          }
         }
       `}</style>
     </section>

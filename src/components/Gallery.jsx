@@ -237,8 +237,28 @@ export default function Gallery() {
           #gallery > div > div:last-child { grid-template-columns: 1fr 1fr !important; grid-auto-rows: 220px !important; }
           #gallery > div { padding: 0 20px !important; }
         }
-        @media (max-width: 600px) {
-          #gallery > div > div:last-child { grid-template-columns: 1fr !important; grid-auto-rows: 240px !important; }
+        @media (max-width: 700px) {
+          #gallery { padding: 80px 0 !important; }
+          /* 2 columns on mobile so images aren't huge */
+          #gallery > div > div:last-child {
+            grid-template-columns: 1fr 1fr !important;
+            grid-auto-rows: 160px !important;
+            gap: 8px !important;
+          }
+          /* Force all items to take 1 row on mobile for uniform grid */
+          #gallery > div > div:last-child > div {
+            grid-row: span 1 !important;
+          }
+          /* Filter tabs - smaller on mobile */
+          #gallery > div > div:nth-child(3) {
+            gap: 6px !important;
+            margin-bottom: 36px !important;
+          }
+          #gallery > div > div:nth-child(3) button {
+            padding: 8px 18px !important;
+            font-size: 9px !important;
+            min-height: 40px !important;
+          }
         }
       `}</style>
     </section>

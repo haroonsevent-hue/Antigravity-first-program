@@ -202,11 +202,16 @@ export default function Process() {
 
       <style>{`
         @media (max-width: 900px) {
-          .process-grid { grid-template-columns: repeat(2,1fr) !important; }
-          .timeline-svg-container { display: none !important; } /* disable curved svg line when grid collapses to 2 columns */
+          .process-grid { grid-template-columns: repeat(2,1fr) !important; gap: 32px !important; }
+          .timeline-svg-container { display: none !important; }
         }
-        @media (max-width: 500px) {
-          #process > div { padding: 0 24px !important; }
+        @media (max-width: 700px) {
+          #process { padding: 80px 0 !important; }
+          #process > div { padding: 0 20px !important; }
+          #process > div > div:first-child { margin-bottom: 60px !important; }
+          .process-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 24px !important; }
+        }
+        @media (max-width: 400px) {
           .process-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>

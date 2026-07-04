@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const services = [
@@ -10,7 +10,7 @@ const services = [
     desc: 'From venue selection to the final vow, we craft your perfect wedding with meticulous attention to every detail — flowers, lighting, flow, and feeling.',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
       </svg>
     ),
     accent: 'rgba(197,160,89,0.08)',
@@ -22,10 +22,10 @@ const services = [
     desc: 'Professional conferences, product launches, and company galas executed with surgical precision and polished refinement that reflects your brand.',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <rect width="18" height="18" x="3" y="4" rx="2"/>
-        <line x1="16" x2="16" y1="2" y2="6"/>
-        <line x1="8" x2="8" y1="2" y2="6"/>
-        <line x1="3" x2="21" y1="10" y2="10"/>
+        <rect width="18" height="18" x="3" y="4" rx="2" />
+        <line x1="16" x2="16" y1="2" y2="6" />
+        <line x1="8" x2="8" y1="2" y2="6" />
+        <line x1="3" x2="21" y1="10" y2="10" />
       </svg>
     ),
     accent: 'rgba(197,160,89,0.06)',
@@ -37,10 +37,10 @@ const services = [
     desc: 'Birthdays, anniversaries, and reunions transformed into unforgettable celebrations. We handle every detail so you can be fully present.',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
       </svg>
     ),
     accent: 'rgba(197,160,89,0.05)',
@@ -52,8 +52,8 @@ const services = [
     desc: 'Sourcing the finest blooms to create immersive botanical environments — from table centerpieces to ceremony arches that take your breath away.',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
-        <path d="M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+        <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
+        <path d="M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
       </svg>
     ),
     accent: 'rgba(197,160,89,0.07)',
@@ -65,8 +65,8 @@ const services = [
     desc: 'Architectural stage design blending traditional Kerala motifs with contemporary lighting for a truly theatrical experience your guests will talk about.',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <rect x="2" y="3" width="20" height="14" rx="2"/>
-        <path d="M8 21h8M12 17v4"/>
+        <rect x="2" y="3" width="20" height="14" rx="2" />
+        <path d="M8 21h8M12 17v4" />
       </svg>
     ),
     accent: 'rgba(197,160,89,0.05)',
@@ -78,8 +78,8 @@ const services = [
     desc: 'Our curated team of photographers and videographers capture every stolen glance, every laugh, and every tear — your story told beautifully.',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
-        <circle cx="12" cy="13" r="3"/>
+        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+        <circle cx="12" cy="13" r="3" />
       </svg>
     ),
     accent: 'rgba(197,160,89,0.06)',
@@ -89,13 +89,21 @@ const services = [
 function ServiceCard({ s, i, scrollTo }) {
   const cardRef = useRef(null);
   const [hovered, setHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-100, 100], [8, -8]), { damping: 25 });
   const rotateY = useSpring(useTransform(x, [-100, 100], [-8, 8]), { damping: 25 });
 
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 700);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
   function onMouseMove(e) {
-    if (!cardRef.current) return;
+    if (!cardRef.current || isMobile) return;
     const rect = cardRef.current.getBoundingClientRect();
     x.set(e.clientX - rect.left - rect.width / 2);
     y.set(e.clientY - rect.top - rect.height / 2);
@@ -114,9 +122,10 @@ function ServiceCard({ s, i, scrollTo }) {
       transition={{ delay: i * 0.1, duration: 1, ease: [0.16, 1, 0.3, 1] }}
       style={{
         perspective: 1000,
-        rotateX, rotateY,
+        rotateX: isMobile ? 0 : rotateX,
+        rotateY: isMobile ? 0 : rotateY,
         position: 'relative',
-        padding: '52px 44px',
+        padding: isMobile ? '32px 24px' : '52px 44px',
         background: hovered ? 'var(--card-hover-bg)' : 'var(--card-bg)',
         border: `1px solid ${hovered ? 'rgba(197,160,89,0.22)' : 'rgba(197,160,89,0.07)'}`,
         borderRadius: 2,
@@ -138,7 +147,9 @@ function ServiceCard({ s, i, scrollTo }) {
 
       {/* Glow corner */}
       <div style={{
-        position: 'absolute', top: 0, right: 0, width: 120, height: 120,
+        position: 'absolute', top: 0, right: 0,
+        width: isMobile ? 80 : 120,
+        height: isMobile ? 80 : 120,
         background: `radial-gradient(circle at top right, ${s.accent}, transparent 70%)`,
         opacity: hovered ? 1 : 0, transition: 'opacity 0.4s',
         pointerEvents: 'none',
@@ -146,9 +157,9 @@ function ServiceCard({ s, i, scrollTo }) {
 
       {/* Number watermark */}
       <div style={{
-        position: 'absolute', top: 16, right: 28,
+        position: 'absolute', top: isMobile ? 8 : 16, right: isMobile ? 16 : 28,
         fontFamily: 'Cormorant Garamond, serif',
-        fontSize: 96, fontWeight: 700, lineHeight: 1,
+        fontSize: isMobile ? 56 : 96, fontWeight: 700, lineHeight: 1,
         color: `rgba(197,160,89,${hovered ? 0.1 : 0.05})`,
         transition: 'color 0.4s',
         userSelect: 'none', pointerEvents: 'none',
@@ -161,11 +172,11 @@ function ServiceCard({ s, i, scrollTo }) {
         animate={hovered ? { background: 'var(--gold)', color: 'var(--green)', rotate: 8, scale: 1.08 } : { background: 'transparent', color: 'var(--gold)', rotate: 0, scale: 1 }}
         transition={{ duration: 0.4 }}
         style={{
-          width: 60, height: 60,
+          width: isMobile ? 48 : 60, height: isMobile ? 48 : 60,
           border: '1px solid rgba(197,160,89,0.3)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           borderRadius: 2,
-          marginBottom: 36,
+          marginBottom: isMobile ? 24 : 36,
         }}
       >
         {s.icon}
@@ -176,10 +187,10 @@ function ServiceCard({ s, i, scrollTo }) {
         <p style={{ fontSize: 9, letterSpacing: '0.35em', color: 'var(--gold)', textTransform: 'uppercase', marginBottom: 8, opacity: 0.7 }}>
           {s.tagline}
         </p>
-        <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 28, fontWeight: 400, color: 'var(--white)', marginBottom: 18, lineHeight: 1.15 }}>
+        <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: isMobile ? 24 : 28, fontWeight: 400, color: 'var(--white)', marginBottom: isMobile ? 14 : 18, lineHeight: 1.15 }}>
           {s.title}
         </h3>
-        <p style={{ fontSize: 14, lineHeight: 1.85, color: 'var(--text-dim)', marginBottom: 36 }}>
+        <p style={{ fontSize: isMobile ? 13 : 14, lineHeight: 1.85, color: 'var(--text-dim)', marginBottom: isMobile ? 28 : 36 }}>
           {s.desc}
         </p>
 
@@ -191,13 +202,15 @@ function ServiceCard({ s, i, scrollTo }) {
             fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase',
             color: 'var(--gold)', background: 'none', border: 'none',
             fontFamily: 'Cinzel, serif',
+            cursor: isMobile ? 'pointer' : 'none',
+            minHeight: isMobile ? 44 : 'auto',
           }}
           whileHover={{ gap: 16 }}
           transition={{ duration: 0.3 }}
         >
           Enquire Now
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
+            <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </motion.button>
       </div>
@@ -206,7 +219,7 @@ function ServiceCard({ s, i, scrollTo }) {
       <motion.div
         animate={hovered ? { scaleX: 1 } : { scaleX: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        style={{ position: 'absolute', bottom: 0, left: 44, right: 44, height: 1, background: 'var(--gold)', transformOrigin: 'left', opacity: 0.4 }}
+        style={{ position: 'absolute', bottom: 0, left: isMobile ? 24 : 44, right: isMobile ? 24 : 44, height: 1, background: 'var(--gold)', transformOrigin: 'left', opacity: 0.4 }}
       />
     </motion.div>
   );
@@ -255,9 +268,13 @@ export default function Services({ scrollTo }) {
           #services > div > div:last-child { grid-template-columns: repeat(2, 1fr) !important; }
         }
         @media (max-width: 700px) {
-          #services { padding: 100px 0 !important; }
-          #services > div { padding: 0 24px !important; }
-          #services > div > div:last-child { grid-template-columns: 1fr !important; }
+          #services { padding: 80px 0 !important; }
+          #services > div { padding: 0 20px !important; }
+          #services > div > div:first-child { margin-bottom: 48px !important; }
+          #services > div > div:last-child {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
         }
       `}</style>
     </section>

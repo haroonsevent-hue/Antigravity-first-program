@@ -382,3 +382,110 @@ textarea.form-input { resize: none; }
 
 /* ─── SCROLLBAR PREVENT SHIFT ─────────────────────── */
 html { scrollbar-gutter: stable; }
+
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE-ONLY RESPONSIVE STYLES (≤768px)
+   Desktop version remains COMPLETELY UNTOUCHED.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Global Mobile Fixes ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  html {
+    overflow-x: hidden;
+    scrollbar-gutter: auto;
+  }
+  body {
+    overflow-x: hidden;
+    cursor: auto;
+    -webkit-text-size-adjust: 100%;
+  }
+  a, button, [data-cursor] {
+    cursor: auto;
+  }
+
+  /* Improve touch targets globally */
+  button, a, select, input, textarea {
+    min-height: 44px;
+  }
+
+  /* Better section title scaling on mobile */
+  .section-title {
+    font-size: clamp(28px, 8vw, 44px);
+    line-height: 1.15;
+  }
+
+  /* Adjust section label */
+  .section-label {
+    font-size: 8px;
+    letter-spacing: 0.45em;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
+
+  /* Gold rule */
+  .gold-rule {
+    margin: 20px 0;
+  }
+  .gold-rule.center {
+    margin: 20px auto;
+    width: 60px;
+  }
+
+  /* Buttons — larger touch targets */
+  .btn-primary {
+    padding: 16px 32px;
+    font-size: 9px;
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+    justify-content: center;
+  }
+  .btn-outline {
+    padding: 15px 32px;
+    font-size: 9px;
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+  }
+
+  /* Form inputs — touch-friendly */
+  .form-input {
+    padding: 14px 16px;
+    font-size: 16px; /* Prevents iOS zoom */
+  }
+
+  /* Submit button */
+  .submit-btn {
+    padding: 16px;
+    font-size: 10px;
+    min-height: 48px;
+  }
+
+  /* Back to top — mobile position */
+  .back-to-top {
+    bottom: 20px !important;
+    right: 20px !important;
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  /* Review cards */
+  .review-card {
+    padding: 28px 20px;
+  }
+  .review-text {
+    font-size: 17px;
+    line-height: 1.65;
+  }
+}
+
+/* ── Small phone fixes (≤480px) ───────────────────────────────── */
+@media (max-width: 480px) {
+  .section-title {
+    font-size: clamp(24px, 7.5vw, 36px);
+  }
+  .btn-primary,
+  .btn-outline {
+    max-width: 100%;
+  }
+}

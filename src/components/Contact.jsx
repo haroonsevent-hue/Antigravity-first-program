@@ -223,13 +223,21 @@ export default function Contact() {
       <style>{`
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6); }
         @media (max-width: 1024px) {
-          #contact > div { grid-template-columns: 1fr !important; gap: 60px !important; }
+          #contact > div { grid-template-columns: 1fr !important; gap: 48px !important; }
         }
         @media (max-width: 768px) {
-          #contact { padding: 100px 0 !important; }
-          #contact > div { padding: 0 24px !important; }
-          #contact > div > div:last-child { padding: 36px 24px !important; }
+          #contact { padding: 80px 0 !important; }
+          #contact > div { padding: 0 20px !important; }
+          #contact > div > div:last-child { padding: 32px 20px !important; }
           #contact > div > div:last-child form > div:nth-child(2) { grid-template-columns: 1fr !important; }
+          /* Prevent iOS zoom on inputs */
+          #contact input, #contact select, #contact textarea {
+            font-size: 16px !important;
+          }
+          /* WhatsApp button — full width */
+          #contact button[type="submit"] {
+            min-height: 48px !important;
+          }
         }
       `}</style>
     </section>

@@ -156,6 +156,7 @@ function Counter({ target, suffix, label }) {
 
       {/* Number */}
       <motion.div
+        className="stat-number"
         initial={{ opacity: 0, y: 24 }}
         animate={active ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -199,6 +200,7 @@ function Counter({ target, suffix, label }) {
 
       {/* Label */}
       <motion.div
+        className="stat-label"
         initial={{ opacity: 0 }}
         animate={active ? { opacity: 1 } : {}}
         transition={{ duration: 0.6, delay: 0.5 }}
@@ -224,7 +226,7 @@ const stats = [
 
 export default function Stats() {
   return (
-    <div style={{
+    <div className="stats-section" style={{
       padding: '120px 0',
       background: 'linear-gradient(135deg, var(--green2) 0%, var(--green3) 50%, var(--green4) 100%)',
       position: 'relative',
@@ -241,7 +243,7 @@ export default function Stats() {
           <div key={i} style={{ position: 'relative' }}>
             <Counter {...s} />
             {i < stats.length - 1 && (
-              <div style={{ position: 'absolute', right: 0, top: '15%', bottom: '15%', width: 1, background: 'linear-gradient(to bottom, transparent, rgba(197,160,89,0.12), transparent)' }} />
+              <div className="stat-divider" style={{ position: 'absolute', right: 0, top: '15%', bottom: '15%', width: 1, background: 'linear-gradient(to bottom, transparent, rgba(197,160,89,0.12), transparent)' }} />
             )}
           </div>
         ))}
@@ -249,10 +251,38 @@ export default function Stats() {
 
       <style>{`
         @media (max-width: 900px) {
-          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .stats-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 40px !important;
+          }
+        }
+        @media (max-width: 700px) {
+          .stats-section {
+            padding: 80px 0 !important;
+          }
+          .stats-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            padding: 0 20px !important;
+            gap: 40px 20px !important;
+          }
+          /* Hide vertical dividers on mobile */
+          .stat-divider {
+            display: none !important;
+          }
         }
         @media (max-width: 500px) {
-          .stats-grid { grid-template-columns: 1fr !important; padding: 0 24px !important; }
+          .stats-grid {
+            grid-template-columns: 1fr !important;
+            gap: 48px !important;
+          }
+          /* Prevent wrapping on tiny screens */
+          .stat-number {
+            font-size: clamp(40px, 12vw, 52px) !important;
+          }
+          .stat-label {
+            font-size: 9px !important;
+            letter-spacing: 0.15em !important;
+          }
         }
       `}</style>
     </div>

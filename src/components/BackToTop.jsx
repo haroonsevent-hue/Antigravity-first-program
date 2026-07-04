@@ -20,6 +20,7 @@ export default function BackToTop({ scrollTo }) {
 
   return (
     <motion.button
+      className="back-to-top"
       onClick={() => scrollTo('home')}
       initial={{ opacity: 0, scale: 0 }}
       animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0 }}

@@ -321,12 +321,52 @@ export default function Hero({ scrollTo, heroImageUrl }) {
         animate={{ rotate: 360 }}
         transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
         style={{ position: 'absolute', right: '-8%', top: '10%', width: 500, height: 500, borderRadius: '50%', border: '1px solid rgba(197,160,89,0.04)', pointerEvents: 'none', zIndex: 4 }}
+        className="hero-ring-large"
       />
       <motion.div
         animate={{ rotate: -360 }}
         transition={{ duration: 70, repeat: Infinity, ease: 'linear' }}
+        className="hero-ring"
         style={{ position: 'absolute', left: '-10%', bottom: '5%', width: 400, height: 400, borderRadius: '50%', border: '1px solid rgba(197,160,89,0.03)', pointerEvents: 'none', zIndex: 4 }}
       />
+
+      <style>{`
+        @media (max-width: 768px) {
+          /* Hide floating rings on mobile — they cause overflow */
+          .hero-ring-large, .hero-ring {
+            display: none !important;
+          }
+          /* Eyebrow text — smaller on mobile */
+          #home span[style*="0.45em"] {
+            font-size: 7px !important;
+            letter-spacing: 0.3em !important;
+          }
+          /* Hero title — mobile-optimized */
+          #home h1 div div {
+            font-size: clamp(40px, 12vw, 56px) !important;
+          }
+          /* Subtitle — mobile */
+          #home p[style*="max-width: 520px"] {
+            font-size: 13px !important;
+            margin-bottom: 36px !important;
+          }
+          /* Scroll indicator — hide completely on mobile to prevent overlapping buttons */
+          #home > div:last-of-type {
+            display: none !important;
+          }
+          /* CTA buttons container — stack on mobile */
+          #home div[style*="flexWrap: 'wrap'"] {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 16px !important;
+          }
+        }
+        @media (max-width: 400px) {
+          #home h1 div div {
+            font-size: clamp(32px, 11vw, 44px) !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

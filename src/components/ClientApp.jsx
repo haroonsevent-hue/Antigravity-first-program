@@ -20,6 +20,7 @@ import Footer         from './Footer';
 import SectionDivider from './SectionDivider';
 import AdminPanel     from './AdminPanel';
 import BackToTop      from './BackToTop';
+import SocialPanel    from './SocialPanel';
 
 export default function ClientApp() {
   const [loaded, setLoaded] = useState(false);
@@ -95,6 +96,9 @@ export default function ClientApp() {
 
       {/* Back to top button — always mounted */}
       <BackToTop scrollTo={scrollTo} />
+
+      {/* Floating social panel — always mounted, slides in after Hero */}
+      <SocialPanel />
 
       {/* Main site — fades in after loader */}
       <AnimatePresence>

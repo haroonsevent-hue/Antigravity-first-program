@@ -29,7 +29,7 @@ export default function Footer({ scrollTo }) {
       {/* Ambient glow */}
       <div style={{ position: 'absolute', bottom: '-30%', left: '50%', transform: 'translateX(-50%)', width: '60%', height: '100%', background: 'radial-gradient(circle, rgba(197,160,89,0.025), transparent 70%)', filter: 'blur(80px)', pointerEvents: 'none' }} />
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 60px 64px', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 60, position: 'relative', zIndex: 1 }}>
+      <div className="footer-grid" style={{ maxWidth: 1200, margin: '0 auto', padding: '80px 60px 64px', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 60, position: 'relative', zIndex: 1 }}>
         {/* Brand column */}
         <div>
           <button onClick={() => scrollTo('home')} style={{ display: 'flex', alignItems: 'center', gap: 16, background: 'none', border: 'none', marginBottom: 28, padding: 0 }}>
@@ -116,11 +116,87 @@ export default function Footer({ scrollTo }) {
 
       <style>{`
         @media (max-width: 900px) {
-          footer > div:first-of-type { grid-template-columns: 1fr 1fr !important; padding: 60px 30px !important; }
+          .footer-grid {
+            grid-template-columns: 1fr 1fr !important;
+            padding: 60px 30px !important;
+            gap: 40px !important;
+          }
         }
         @media (max-width: 600px) {
-          footer > div:first-of-type { grid-template-columns: 1fr !important; padding: 50px 20px !important; }
-          footer > div:last-of-type { padding: 20px !important; flex-direction: column !important; text-align: center !important; }
+          /* Main grid → single column, centered */
+          .footer-grid {
+            grid-template-columns: 1fr !important;
+            padding: 48px 24px 40px !important;
+            gap: 36px !important;
+          }
+
+          /* Brand column — center everything */
+          .footer-grid > div:first-child {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .footer-grid > div:first-child button {
+            justify-content: center !important;
+          }
+          .footer-grid > div:first-child p {
+            text-align: center;
+            max-width: 100% !important;
+            margin-bottom: 24px !important;
+          }
+
+          /* Social icons — centered, larger touch targets */
+          .footer-grid > div:first-child > div:last-child {
+            justify-content: center;
+            gap: 12px !important;
+          }
+          .footer-grid > div:first-child > div:last-child a {
+            width: 44px !important;
+            height: 44px !important;
+          }
+
+          /* Quick Links — centered with divider top */
+          .footer-grid > div:nth-child(2) {
+            text-align: center;
+            border-top: 1px solid rgba(197,160,89,0.1);
+            padding-top: 28px;
+          }
+          .footer-grid > div:nth-child(2) h4 {
+            text-align: center;
+            margin-bottom: 20px !important;
+          }
+          .footer-grid > div:nth-child(2) button {
+            text-align: center !important;
+            display: inline-block !important;
+            margin: 0 8px 12px !important;
+            font-size: 14px !important;
+            min-height: 44px !important;
+            line-height: 44px !important;
+            padding: 0 4px !important;
+          }
+
+          /* Contact info — centered with divider top */
+          .footer-grid > div:nth-child(3) {
+            text-align: center;
+            border-top: 1px solid rgba(197,160,89,0.1);
+            padding-top: 28px;
+          }
+          .footer-grid > div:nth-child(3) h4 {
+            text-align: center;
+            margin-bottom: 20px !important;
+          }
+          .footer-grid > div:nth-child(3) > div {
+            justify-content: center;
+          }
+
+          /* Bottom bar — stack and center */
+          footer > div:last-of-type {
+            padding: 20px 24px !important;
+            flex-direction: column !important;
+            text-align: center !important;
+            gap: 8px !important;
+          }
         }
       `}</style>
     </footer>

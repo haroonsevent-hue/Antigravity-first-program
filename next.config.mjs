@@ -15,6 +15,7 @@ if (isGithubActions) {
   // Settings for GitHub Pages
   nextConfig.output = 'export';
   nextConfig.basePath = '/Antigravity-first-program';
+  nextConfig.trailingSlash = true;
 } else {
   // Settings for local development with backend
   nextConfig.rewrites = async () => {
